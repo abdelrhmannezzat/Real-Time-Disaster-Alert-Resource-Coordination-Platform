@@ -9,7 +9,7 @@ class Notification(Base):
     __tablename__ = "notification"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     type = Column(Enum(NotificationType), nullable=False)
     title = Column(Text, nullable=False)
     message = Column(Text, nullable=False)
@@ -17,4 +17,4 @@ class Notification(Base):
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
 
     # Relationship
-    user = relationship("User", back_populates="notifications")
+    users = relationship("User", back_populates="notifications")

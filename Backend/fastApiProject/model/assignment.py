@@ -18,6 +18,6 @@ class Assignment(Base):
     updated_at = Column(DateTime)
 
     # Relationships
-    volunteer = relationship("User", back_populates="assignments_received")
-    coordinator = relationship("User", back_populates="assignments_given")
+    volunteer = relationship("User", back_populates="assignments_received", foreign_keys=[assigned_to])
+    coordinator = relationship("User", back_populates="assignments_given", foreign_keys=[assigned_by])
     disaster = relationship("Disaster", back_populates="assignments")
