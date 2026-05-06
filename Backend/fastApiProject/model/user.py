@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text, DateTime, Enum
+from sqlalchemy import Column, Integer, Text, DateTime, Enum, Boolean
 from sqlalchemy.orm import relationship
 
 from config.database import Base
@@ -12,6 +12,7 @@ class User(Base):
     email = Column(Text, unique=True, nullable=False)
     password_hash = Column(Text, nullable=False)
     role = Column(Enum(UserRole), nullable=False)
+    approved = Column(Boolean, nullable=False, default=False)
     created_at = Column(DateTime, nullable=False)
     updated_at = Column(DateTime, nullable=False)
 

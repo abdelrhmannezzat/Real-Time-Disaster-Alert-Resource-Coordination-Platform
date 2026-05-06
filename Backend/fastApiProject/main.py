@@ -1,8 +1,14 @@
-from fastapi import FastAPI
-from api.routes.disaster_route import router as disaster_router
+from fastapi import FastAPI, APIRouter
+from api.routes.auth_route import router as auth_router
 app = FastAPI()
 
-app.include_router(disaster_router)
+
+v1_router = APIRouter(prefix="/api/v1")
+
+v1_router.include_router(auth_router, prefix='/auth')
+
+
+app.include_router(v1_router)
 
 
 @app.get("/")
