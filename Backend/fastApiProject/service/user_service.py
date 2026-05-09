@@ -9,3 +9,6 @@ class UserService:
 
     def activate_user(self, user_id: int):
         self.user_repository.activate_user(user_id)
+
+    def deactivate_user(self, user_id: int):
+        self.user_repository.deactivate_user(user_id)

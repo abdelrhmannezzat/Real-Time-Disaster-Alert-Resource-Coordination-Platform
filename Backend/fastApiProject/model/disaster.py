@@ -18,9 +18,9 @@ class Disaster(Base):
     status = Column(Enum(DisasterStatus), nullable=False)
     radius = Column(Numeric, nullable=False)
     location_id = Column(Integer, ForeignKey('locations.id'))
-    external_id = Column(Text, nullable=False, unique=True)
+    external_id = Column(Text, nullable=True, unique=True)
     start_time = Column(DateTime, nullable=False)
-    end_time = Column(DateTime, nullable=False)
+    end_time = Column(DateTime, nullable=True)
     created_at = Column(DateTime, nullable=False, server_default=func.now())
     updated_at = Column(DateTime, nullable=False, server_default=func.now(), onupdate=func.now())
 

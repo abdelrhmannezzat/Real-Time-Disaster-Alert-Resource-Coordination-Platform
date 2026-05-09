@@ -36,3 +36,15 @@ class UserRepository:
 
         user.approved = True
         self.db.commit()
+
+    def deactivate_user(self, user_id: int):
+        user = self.db.query(User).filter(User.id == user_id).first()
+
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User is not found"
+            )
+
+        user.approved = False
+        self.db.commit()
