@@ -15,8 +15,8 @@ router = APIRouter()
     response_model=UserRegistrationResponse,
     status_code=status.HTTP_201_CREATED
 )
-async def register_user(user: UserRegistrationRequest, auth_service: AuthService = Depends(AuthService)):
-    return await auth_service.create_user(user)
+def register_user(user: UserRegistrationRequest, auth_service: AuthService = Depends(AuthService)):
+    return auth_service.create_user(user)
 
 
 @router.post(
@@ -24,5 +24,5 @@ async def register_user(user: UserRegistrationRequest, auth_service: AuthService
     response_model=UserLoginResponse,
     status_code=status.HTTP_200_OK
 )
-async def user_login(user: UserLoginRequest, auth_service: AuthService = Depends(AuthService)):
-    return await auth_service.user_login(user)
+def user_login(user: UserLoginRequest, auth_service: AuthService = Depends(AuthService)):
+    return auth_service.user_login(user)

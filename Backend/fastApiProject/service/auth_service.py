@@ -12,7 +12,7 @@ class AuthService:
     def __init__(self, user_repository: UserRepository = Depends(UserRepository)):
         self.user_repository = user_repository
 
-    async def create_user(self, user: UserRegistrationRequest):
+    def create_user(self, user: UserRegistrationRequest):
         if self.user_repository.get_user_by_email(user.email) is not None:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
@@ -20,7 +20,7 @@ class AuthService:
             )
         return self.user_repository.add_user(user)
 
-    async def user_login(self, user_request: UserLoginRequest):
+    def user_login(self, user_request: UserLoginRequest):
         user = self.user_repository.get_user_by_email(user_request.email)
         if user is None:
             raise HTTPException(
@@ -33,6 +33,13 @@ class AuthService:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid email or password"
             )
+
+        if not user.approved:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="User is not approved"
+            )
+
         payload = {'sub': user.email, 'role': user.role}
 
         user_res = UserLoginResponse(

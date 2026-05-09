@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, Column, Text, Enum, ForeignKey, DateTime
+from sqlalchemy import Integer, Column, Text, Enum, ForeignKey, DateTime, func
 from sqlalchemy.orm import relationship
 
 from config.database import Base
@@ -16,8 +16,8 @@ class Resource(Base):
     assigned_by = Column(Integer, ForeignKey('users.id'), nullable=False)
     location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
     disaster_id = Column(Integer, ForeignKey('disaster.id'), nullable=False)
-    created_at = Column(DateTime, nullable=False)
-    updated_at = Column(DateTime, nullable=False)
+    created_at = Column(DateTime, nullable=False, server_default=func.now())
+    updated_at = Column(DateTime, nullable=False, server_default=func.now(), onupdate=func.now())
 
     # Relationships
     assigner = relationship("User")

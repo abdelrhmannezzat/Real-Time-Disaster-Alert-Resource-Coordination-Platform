@@ -14,5 +14,5 @@ class VolunteerProfile(Base):
     location_id = Column(Integer, ForeignKey('locations.id'))
 
     # Relationships
-    users = relationship('User', back_populates='volunteer_profiles')
+    user = relationship('User', back_populates='volunteer_profile')
     location = relationship('Location')

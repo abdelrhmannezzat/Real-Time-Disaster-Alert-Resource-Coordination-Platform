@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text, ForeignKey, DateTime, Enum
+from sqlalchemy import Column, Integer, Text, ForeignKey, DateTime, Enum, func
 from sqlalchemy.orm import relationship
 
 from config.database import Base
@@ -14,8 +14,8 @@ class Assignment(Base):
     assigned_to = Column(Integer, ForeignKey('users.id'), nullable=False)
     assigned_by = Column(Integer, ForeignKey('users.id'), nullable=False)
     disaster_id = Column(Integer, ForeignKey('disaster.id'), nullable=False)
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
     # Relationships
     volunteer = relationship("User", back_populates="assignments_received", foreign_keys=[assigned_to])

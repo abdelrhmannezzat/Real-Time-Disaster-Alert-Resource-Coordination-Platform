@@ -1,6 +1,4 @@
-from datetime import datetime
-
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from config.database import get_db
@@ -26,3 +24,15 @@ class UserRepository:
         self.db.commit()
         self.db.refresh(new_user)
         return new_user
+
+    def activate_user(self, user_id: int):
+        user = self.db.query(User).filter(User.id == user_id).first()
+
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User is not found"
+            )
+
+        user.approved = True
+        self.db.commit()

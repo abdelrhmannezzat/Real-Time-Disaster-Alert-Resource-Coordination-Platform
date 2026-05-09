@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey, Text, Numeric, DateTime, Enum
+from sqlalchemy import Column, Integer, ForeignKey, Text, Numeric, DateTime, Enum, func
 from sqlalchemy.orm import relationship
 
 from config.database import Base
@@ -18,11 +18,11 @@ class Disaster(Base):
     status = Column(Enum(DisasterStatus), nullable=False)
     radius = Column(Numeric, nullable=False)
     location_id = Column(Integer, ForeignKey('locations.id'))
-    external_id = Column(Text, nullable=False)
+    external_id = Column(Text, nullable=False, unique=True)
     start_time = Column(DateTime, nullable=False)
     end_time = Column(DateTime, nullable=False)
-    created_at = Column(DateTime, nullable=False)
-    updated_at = Column(DateTime, nullable=False)
+    created_at = Column(DateTime, nullable=False, server_default=func.now())
+    updated_at = Column(DateTime, nullable=False, server_default=func.now(), onupdate=func.now())
 
 
     # Relationships
