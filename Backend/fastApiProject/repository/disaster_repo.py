@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from config.database import get_db
@@ -30,5 +30,13 @@ class DisasterRepository:
         self.db.refresh(new_disaster)
         return new_disaster
 
+    def get_disaster(self, disaster_id):
+        disaster = self.db.query(Disaster).filter(Disaster.id == disaster_id).first()
 
+        if disaster is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Disaster not found"
+            )
 
+        return disaster

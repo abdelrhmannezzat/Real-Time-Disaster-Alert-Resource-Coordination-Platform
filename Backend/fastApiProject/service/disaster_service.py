@@ -23,5 +23,8 @@ class DisasterService:
         loc = self.location_service.create_location(location_dto)
         return self.disaster_repo.create_disaster_manually(disaster, user_id, loc.id)
 
+    def get_disaster(self, disaster_id: int):
+        return self.disaster_repo.get_disaster(disaster_id)
+
 
 
