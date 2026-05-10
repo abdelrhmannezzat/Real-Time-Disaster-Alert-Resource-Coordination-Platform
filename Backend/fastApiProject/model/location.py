@@ -11,6 +11,6 @@ class Location(Base):
     longitude = Column(Numeric, nullable=False)
     city = Column(Text, nullable=True)
     country = Column(Text, nullable=True)
-    coordinates = Column(Geography(geometry_type="POINT", srid=4326), nullable=True)
+    coordinates = Column(Geography(geometry_type="POINT", srid=4326), nullable=False)
     created_at = Column(DateTime, nullable=False, server_default=func.now())
     updated_at = Column(DateTime, nullable=False, server_default=func.now(), onupdate=func.now())
