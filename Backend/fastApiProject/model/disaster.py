@@ -9,7 +9,7 @@ class Disaster(Base):
     __tablename__ = 'disaster'
 
     id = Column(Integer, primary_key=True)
-    created_by = Column(Integer, ForeignKey('users.id'))
+    created_by = Column(Integer, ForeignKey('users.id'),nullable=True)
     title = Column(Text, nullable=False)
     description = Column(Text, nullable=True)
     type = Column(Enum(DisasterType), nullable=False)

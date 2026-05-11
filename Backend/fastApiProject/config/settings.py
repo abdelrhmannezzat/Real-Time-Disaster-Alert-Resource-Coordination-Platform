@@ -6,6 +6,8 @@ class Settings(BaseSettings):
     JWT_SECRET: str
     JWT_ALGORITHM: str
     JWT_EXPIRATION_MINUTES: int
+    CRON_JOBS_INTERVAL_USGS: int
+    CRON_JOBS_INTERVAL_GDACS: int
 
     class Config:
         env_file = ".env"

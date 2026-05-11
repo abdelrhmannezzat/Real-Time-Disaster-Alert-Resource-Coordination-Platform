@@ -1,8 +1,22 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, APIRouter
 from api.routes.auth_route import router as auth_router
 from api.routes.user_route import router as user_router
 from api.routes.disaster_route import router as disaster_router
-app = FastAPI()
+from cron_jobs.usgs_job import scheduler
+import cron_jobs.usgs_job
+import cron_jobs.gdacs_job
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    scheduler.start()
+
+    yield
+
+    scheduler.shutdown()
+
+app = FastAPI(lifespan=lifespan)
+
+
 
 
 v1_router = APIRouter(prefix="/api/v1")

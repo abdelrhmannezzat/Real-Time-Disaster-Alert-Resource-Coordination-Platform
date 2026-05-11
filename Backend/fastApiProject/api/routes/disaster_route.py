@@ -1,6 +1,9 @@
 from fastapi import APIRouter, status, Depends
+from sqlalchemy.orm import Session
 
+from config.database import get_db
 from dependencies.auth import require_roles
+from dependencies.disaster_dep import get_disaster_service
 from model import User
 from model.enums import UserRole
 from schema.request.disaster_create_request import DisasterCreateRequest
@@ -18,10 +21,11 @@ router = APIRouter()
 )
 def create_disaster_manually(
         disaster: DisasterCreateRequest,
-        disaster_service: DisasterService = Depends(DisasterService),
+        disaster_service: DisasterService = Depends(get_disaster_service),
+        db: Session = Depends(get_db),
         current_user: User = Depends(require_roles(UserRole.COORDINATOR))
 ):
-    return disaster_service.create_disaster_manually(disaster, current_user.id)
+    return disaster_service.create_disaster_manually(disaster, current_user.id, db)
 
 
 @router.get(
@@ -31,7 +35,8 @@ def create_disaster_manually(
 )
 def get_disaster(
         disaster_id: int,
-        disaster_service: DisasterService = Depends(DisasterService),
+        disaster_service: DisasterService = Depends(get_disaster_service),
+        db: Session = Depends(get_db),
         _: User = Depends(require_roles(UserRole.COORDINATOR))
 ):
-    return disaster_service.get_disaster(disaster_id)
+    return disaster_service.get_disaster(disaster_id, db)

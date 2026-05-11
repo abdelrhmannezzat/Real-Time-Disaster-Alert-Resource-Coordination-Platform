@@ -8,10 +8,10 @@ from schema.request.disaster_create_request import DisasterCreateRequest
 
 
 class DisasterRepository:
-    def __init__(self, db: Session = Depends(get_db)):
-        self.db = db
+    def __init__(self):
+        pass
 
-    def create_disaster_manually(self, disaster: DisasterCreateRequest, user_id: int, loc_id: int):
+    def create_disaster_manually(self, disaster: DisasterCreateRequest, user_id: int, loc_id: int, db: Session):
         new_disaster = Disaster(
             created_by=user_id,
             title=disaster.title,
@@ -25,13 +25,13 @@ class DisasterRepository:
             start_time=disaster.start_time,
             end_time=disaster.end_time,
         )
-        self.db.add(new_disaster)
-        self.db.commit()
-        self.db.refresh(new_disaster)
+        db.add(new_disaster)
+        db.commit()
+        db.refresh(new_disaster)
         return new_disaster
 
-    def get_disaster(self, disaster_id):
-        disaster = self.db.query(Disaster).filter(Disaster.id == disaster_id).first()
+    def get_disaster(self, disaster_id, db: Session):
+        disaster = db.query(Disaster).filter(Disaster.id == disaster_id).first()
 
         if disaster is None:
             raise HTTPException(
@@ -40,3 +40,14 @@ class DisasterRepository:
             )
 
         return disaster
+
+    def create_disaster_no_commit(self, disaster: Disaster, db: Session):
+        db.add(disaster)
+        db.flush()
+        return disaster
+
+    def external_id_exists(self, external_id: str, db: Session):
+        temp = db.query(Disaster).filter(Disaster.external_id == external_id).first()
+        if not temp:
+            return False
+        return True

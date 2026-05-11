@@ -8,10 +8,10 @@ from schema.request.location_create_request import LocationCreateRequest
 
 
 class LocationRepository:
-    def __init__(self, db: Session = Depends(get_db)):
-        self.db = db
+    def __init__(self):
+        pass
 
-    def create_location(self, location: LocationCreateRequest):
+    def create_location(self, location: LocationCreateRequest, db: Session):
         new_location = Location(
             latitude=location.latitude,
             longitude=location.longitude,
@@ -20,7 +20,13 @@ class LocationRepository:
             coordinates=WKTElement(f"POINT({location.longitude} {location.latitude})", srid=4326)
         )
 
-        self.db.add(new_location)
-        self.db.commit()
-        self.db.refresh(new_location)
+        db.add(new_location)
+        db.commit()
+        db.refresh(new_location)
         return new_location
+
+    def create_location_no_commit(self, location: Location, db: Session):
+        db.add(location)
+        db.flush()
+        return location
+
