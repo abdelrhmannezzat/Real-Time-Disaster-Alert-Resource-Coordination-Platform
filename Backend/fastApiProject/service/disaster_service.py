@@ -1,8 +1,6 @@
-from fastapi import Depends
 from geoalchemy2 import WKTElement
 from sqlalchemy.orm import Session
-
-from config.database import get_db
+from messaging.publisher import EventPublisher
 from model import Location, Disaster
 from repository.disaster_repo import DisasterRepository
 from schema.request.disaster_create_request import DisasterCreateRequest
@@ -13,10 +11,12 @@ from service.location_service import LocationService
 class DisasterService:
     def __init__(self,
                  disaster_repo: DisasterRepository,
-                 location_service: LocationService
+                 location_service: LocationService,
+                 publisher: EventPublisher
     ):
         self.disaster_repo = disaster_repo
         self.location_service = location_service
+        self.publisher = publisher
 
     def create_disaster_manually(self, disaster: DisasterCreateRequest, user_id: int, db: Session):
         location_dto = LocationCreateRequest(
@@ -26,7 +26,19 @@ class DisasterService:
             country=disaster.country
         )
         loc = self.location_service.create_location(location_dto, db)
-        return self.disaster_repo.create_disaster_manually(disaster, user_id, loc.id, db)
+        disaster = self.disaster_repo.create_disaster_manually(disaster, user_id, loc.id, db)
+
+        payload = {
+            'id': disaster.id,
+            'title': disaster.title,
+            'severity': disaster.severity,
+            'latitude': loc.latitude,
+            'longitude': loc.longitude
+        }
+
+        self.publisher.publish_disaster_created(payload)
+
+        return disaster
 
     def get_disaster(self, disaster_id: int, db: Session):
         return self.disaster_repo.get_disaster(disaster_id, db)
@@ -63,9 +75,19 @@ class DisasterService:
                 new_disaster = self.disaster_repo.create_disaster_no_commit(new_disaster, db)
 
                 db.commit()
-                print("Created " + disaster.title)
+
+                payload = {
+                    'id': new_disaster.id,
+                    'title': new_disaster.title,
+                    'severity': new_disaster.severity,
+                    'latitude': location.latitude,
+                    'longitude': location.longitude
+                }
+
+                self.publisher.publish_disaster_created(payload)
+                # print("Created " + disaster.title)
             except Exception as exp:
-                print(exp)
+                # print(exp)
                 db.rollback()
 
 

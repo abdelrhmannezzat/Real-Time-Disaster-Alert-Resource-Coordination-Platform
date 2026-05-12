@@ -1,3 +1,4 @@
+from messaging.publisher import EventPublisher
 from repository.disaster_repo import DisasterRepository
 from repository.location_repo import LocationRepository
 from service.disaster_service import DisasterService
@@ -8,4 +9,5 @@ def get_disaster_service():
     repo = DisasterRepository()
     location_repo = LocationRepository()
     location_service = LocationService(location_repo)
-    return DisasterService(repo, location_service)
+    publisher = EventPublisher()
+    return DisasterService(repo, location_service, publisher)
