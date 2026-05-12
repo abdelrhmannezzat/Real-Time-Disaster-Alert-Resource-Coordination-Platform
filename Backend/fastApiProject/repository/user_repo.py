@@ -3,30 +3,30 @@ from sqlalchemy.orm import Session
 
 from config.database import get_db
 from model import User
+from repository.interfaces.user_repo_interface import IUserRepository
 from schema.request.user_registration_request import UserRegistrationRequest
 from utils.hashing import hash_password
 
 
-class UserRepository:
-    def __init__(self, db: Session = Depends(get_db)):
-        self.db = db
+class UserRepository(IUserRepository):
+    def __init__(self):
+        pass
 
-    def get_user_by_email(self, email: str) -> User | None:
-        return self.db.query(User).filter(User.email == email).first()
+    def get_user_by_email(self, email: str, db: Session) -> User | None:
+        return db.query(User).filter(User.email == email).first()
 
-    def add_user(self, user: UserRegistrationRequest) -> User:
+    def add_user(self, user: UserRegistrationRequest, db: Session) -> User:
         new_user = User(
             email=user.email,
             password_hash=hash_password(user.password),
             role=user.role
         )
-        self.db.add(new_user)
-        self.db.commit()
-        self.db.refresh(new_user)
+        db.add(new_user)
+        db.flush()
         return new_user
 
-    def activate_user(self, user_id: int):
-        user = self.db.query(User).filter(User.id == user_id).first()
+    def activate_user(self, user_id: int, db: Session):
+        user = db.query(User).filter(User.id == user_id).first()
 
         if user is None:
             raise HTTPException(
@@ -35,10 +35,10 @@ class UserRepository:
             )
 
         user.approved = True
-        self.db.commit()
+        db.commit()
 
-    def deactivate_user(self, user_id: int):
-        user = self.db.query(User).filter(User.id == user_id).first()
+    def deactivate_user(self, user_id: int, db: Session):
+        user = db.query(User).filter(User.id == user_id).first()
 
         if user is None:
             raise HTTPException(
@@ -47,4 +47,4 @@ class UserRepository:
             )
 
         user.approved = False
-        self.db.commit()
+        db.commit()

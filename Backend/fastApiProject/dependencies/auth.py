@@ -3,7 +3,14 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
 from config.database import get_db
+from dependencies.location_dep import get_location_service
+from dependencies.volunteer_profile_dep import get_volunteer_profile_service
 from model import User
+from repository.user_repo import UserRepository
+from repository.volunteer_profile_repo import VolunteerProfileRepository
+from service.auth_service import AuthService
+from service.location_service import LocationService
+from service.volunteer_profile_service import VolunteerProfileService
 from utils import jwt
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/api/v1/auth/login') # tokenurl is just for documentation
@@ -48,3 +55,12 @@ def require_roles(*allowed_roles):
         return current_user
 
     return checker
+
+
+def get_auth_service(
+        db: Session = Depends(get_db),
+        volunteer_service: VolunteerProfileService = Depends(get_volunteer_profile_service),
+        location_service: LocationService = Depends(get_location_service)
+):
+    user_repo = UserRepository()
+    return AuthService(user_repo, volunteer_service, location_service, db)

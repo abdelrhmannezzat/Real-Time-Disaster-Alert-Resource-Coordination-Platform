@@ -4,11 +4,15 @@ from api.routes.auth_route import router as auth_router
 from api.routes.user_route import router as user_router
 from api.routes.disaster_route import router as disaster_router
 from cron_jobs.usgs_job import scheduler
-import cron_jobs.usgs_job
-import cron_jobs.gdacs_job
+from api.routes.websocket_route import router as websocket_router
+import asyncio
+from messaging.consumer import consume_disaster_events
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     scheduler.start()
+    asyncio.create_task(consume_disaster_events())
 
     yield
 
@@ -17,15 +21,15 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
-
-
 v1_router = APIRouter(prefix="/api/v1")
 
 v1_router.include_router(auth_router, prefix='/auth')
 v1_router.include_router(user_router, prefix='/users')
 v1_router.include_router(disaster_router, prefix='/disasters')
+v1_router.include_router(websocket_router, prefix='/ws')
 
 app.include_router(v1_router)
+
 
 
 @app.get("/")

@@ -22,10 +22,9 @@ router = APIRouter()
 def create_disaster_manually(
         disaster: DisasterCreateRequest,
         disaster_service: DisasterService = Depends(get_disaster_service),
-        db: Session = Depends(get_db),
         current_user: User = Depends(require_roles(UserRole.COORDINATOR))
 ):
-    return disaster_service.create_disaster_manually(disaster, current_user.id, db)
+    return disaster_service.create_disaster_manually(disaster, current_user.id)
 
 
 @router.get(
@@ -36,7 +35,6 @@ def create_disaster_manually(
 def get_disaster(
         disaster_id: int,
         disaster_service: DisasterService = Depends(get_disaster_service),
-        db: Session = Depends(get_db),
         _: User = Depends(require_roles(UserRole.COORDINATOR))
 ):
-    return disaster_service.get_disaster(disaster_id, db)
+    return disaster_service.get_disaster(disaster_id)

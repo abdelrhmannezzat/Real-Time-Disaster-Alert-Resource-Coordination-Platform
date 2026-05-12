@@ -1,6 +1,9 @@
 from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 from starlette import status
 
+from config.database import get_db
+from dependencies.auth import get_auth_service
 from schema.request.user_login_request import UserLoginRequest
 from schema.request.user_registration_request import UserRegistrationRequest
 from schema.response.user_login_response import UserLoginResponse
@@ -15,7 +18,10 @@ router = APIRouter()
     response_model=UserRegistrationResponse,
     status_code=status.HTTP_201_CREATED
 )
-def register_user(user: UserRegistrationRequest, auth_service: AuthService = Depends(AuthService)):
+def register_user(
+        user: UserRegistrationRequest,
+        auth_service: AuthService = Depends(get_auth_service)
+):
     return auth_service.create_user(user)
 
 
@@ -24,5 +30,8 @@ def register_user(user: UserRegistrationRequest, auth_service: AuthService = Dep
     response_model=UserLoginResponse,
     status_code=status.HTTP_200_OK
 )
-def user_login(user: UserLoginRequest, auth_service: AuthService = Depends(AuthService)):
+def user_login(
+        user: UserLoginRequest,
+        auth_service: AuthService = Depends(get_auth_service)
+):
     return auth_service.user_login(user)

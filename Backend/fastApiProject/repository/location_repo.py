@@ -1,13 +1,11 @@
-from fastapi import Depends
 from geoalchemy2 import WKTElement
 from sqlalchemy.orm import Session
-
-from config.database import get_db
 from model import Location
+from repository.interfaces.location_repo_interface import ILocationRepository
 from schema.request.location_create_request import LocationCreateRequest
 
 
-class LocationRepository:
+class LocationRepository(ILocationRepository):
     def __init__(self):
         pass
 

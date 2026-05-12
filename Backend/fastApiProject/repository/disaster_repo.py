@@ -1,13 +1,12 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
-
-from config.database import get_db
 from model import Disaster
 from model.enums import DisasterSource
+from repository.interfaces.disaster_repo_interface import IDisasterRepository
 from schema.request.disaster_create_request import DisasterCreateRequest
 
 
-class DisasterRepository:
+class DisasterRepository(IDisasterRepository):
     def __init__(self):
         pass
 

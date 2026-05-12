@@ -2,7 +2,7 @@ from geoalchemy2 import WKTElement
 from sqlalchemy.orm import Session
 from messaging.publisher import EventPublisher
 from model import Location, Disaster
-from repository.disaster_repo import DisasterRepository
+from repository.interfaces.disaster_repo_interface import IDisasterRepository
 from schema.request.disaster_create_request import DisasterCreateRequest
 from schema.request.location_create_request import LocationCreateRequest
 from service.location_service import LocationService
@@ -10,23 +10,25 @@ from service.location_service import LocationService
 
 class DisasterService:
     def __init__(self,
-                 disaster_repo: DisasterRepository,
+                 disaster_repo: IDisasterRepository,
                  location_service: LocationService,
-                 publisher: EventPublisher
+                 publisher: EventPublisher,
+                 db: Session
     ):
         self.disaster_repo = disaster_repo
         self.location_service = location_service
         self.publisher = publisher
+        self.db = db
 
-    def create_disaster_manually(self, disaster: DisasterCreateRequest, user_id: int, db: Session):
+    def create_disaster_manually(self, disaster: DisasterCreateRequest, user_id: int):
         location_dto = LocationCreateRequest(
             latitude=disaster.latitude,
             longitude=disaster.longitude,
             city=disaster.city,
             country=disaster.country
         )
-        loc = self.location_service.create_location(location_dto, db)
-        disaster = self.disaster_repo.create_disaster_manually(disaster, user_id, loc.id, db)
+        loc = self.location_service.create_location(location_dto, self.db)
+        disaster = self.disaster_repo.create_disaster_manually(disaster, user_id, loc.id, self.db)
 
         payload = {
             'id': disaster.id,
@@ -40,10 +42,10 @@ class DisasterService:
 
         return disaster
 
-    def get_disaster(self, disaster_id: int, db: Session):
-        return self.disaster_repo.get_disaster(disaster_id, db)
+    def get_disaster(self, disaster_id: int):
+        return self.disaster_repo.get_disaster(disaster_id, self.db)
 
-    def persist_disasters_third_party(self, disasters, db: Session):
+    def persist_disasters_third_party(self, disasters):
         for disaster in disasters:
             location = Location(
                 latitude=disaster.latitude,
@@ -53,11 +55,11 @@ class DisasterService:
                 coordinates=WKTElement(f"POINT({disaster.longitude} {disaster.latitude})", srid=4326)
             )
 
-            if self.disaster_repo.external_id_exists(disaster.external_id, db):
+            if self.disaster_repo.external_id_exists(disaster.external_id, self.db):
                 continue
             try:
 
-                location = self.location_service.create_location_no_commit(location, db)
+                location = self.location_service.create_location_no_commit(location, self.db)
 
                 new_disaster = Disaster(
                     title=disaster.title,
@@ -72,9 +74,9 @@ class DisasterService:
                     start_time=disaster.start_time,
                     end_time=disaster.end_time
                 )
-                new_disaster = self.disaster_repo.create_disaster_no_commit(new_disaster, db)
+                new_disaster = self.disaster_repo.create_disaster_no_commit(new_disaster, self.db)
 
-                db.commit()
+                self.db.commit()
 
                 payload = {
                     'id': new_disaster.id,
@@ -88,7 +90,7 @@ class DisasterService:
                 # print("Created " + disaster.title)
             except Exception as exp:
                 # print(exp)
-                db.rollback()
+                self.db.rollback()
 
 
 
