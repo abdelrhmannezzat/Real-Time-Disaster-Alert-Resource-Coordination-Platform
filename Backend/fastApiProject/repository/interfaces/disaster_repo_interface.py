@@ -19,3 +19,6 @@ class IDisasterRepository(Protocol):
 
     def external_id_exists(self, external_id: str, db: Session):
         ...
+
+    def get_disaster_nearby(self, lat, lng, rad, sev, typ, db):
+        ...

@@ -1,6 +1,9 @@
 from fastapi import HTTPException, status
+from fastapi_pagination.ext.sqlalchemy import paginate
+from geoalchemy2 import WKTElement
+from sqlalchemy import func
 from sqlalchemy.orm import Session
-from model import Disaster
+from model import Disaster, Location
 from model.enums import DisasterSource
 from repository.interfaces.disaster_repo_interface import IDisasterRepository
 from schema.request.disaster_create_request import DisasterCreateRequest
@@ -50,3 +53,32 @@ class DisasterRepository(IDisasterRepository):
         if not temp:
             return False
         return True
+
+    def get_disaster_nearby(self, lat, lng, rad, sev, typ, db):
+        point = WKTElement(f"POINT({lng} {lat})", srid=4326)
+        query = (
+            db.query(
+                Disaster.id,
+                Disaster.title,
+                Disaster.description,
+                Disaster.severity,
+                Disaster.radius,
+                Location.longitude,
+                Location.latitude,
+                Location.city,
+                Location.country
+            )
+            .join(Disaster.location)
+        )
+        if sev:
+            query = query.filter(Disaster.severity == sev)
+
+        if typ:
+            query = query.filter(Disaster.type == typ)
+
+        query = query.filter(
+            Location.coordinates.isnot(None),
+            func.ST_DWithin(Location.coordinates, point, rad * 1000)
+        )
+
+        return paginate(query)

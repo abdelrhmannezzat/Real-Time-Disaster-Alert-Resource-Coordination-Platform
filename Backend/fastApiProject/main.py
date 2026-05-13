@@ -1,5 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, APIRouter
+from fastapi_pagination import add_pagination
+
 from api.routes.auth_route import router as auth_router
 from api.routes.user_route import router as user_router
 from api.routes.disaster_route import router as disaster_router
@@ -19,6 +21,8 @@ async def lifespan(app: FastAPI):
     scheduler.shutdown()
 
 app = FastAPI(lifespan=lifespan)
+
+add_pagination(app)
 
 
 v1_router = APIRouter(prefix="/api/v1")

@@ -1,4 +1,5 @@
 from geoalchemy2 import WKTElement
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from messaging.publisher import EventPublisher
 from model import Location, Disaster
@@ -91,6 +92,9 @@ class DisasterService:
             except Exception as exp:
                 # print(exp)
                 self.db.rollback()
+
+    def get_disaster_nearby(self, lat, lng, rad, sev, typ):
+        return self.disaster_repo.get_disaster_nearby(lat, lng, rad, sev, typ, self.db)
 
 
 

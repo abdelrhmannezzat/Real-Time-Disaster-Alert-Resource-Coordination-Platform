@@ -25,11 +25,11 @@ class JobService:
 
         normalized = normalize_usgs_response(raw)
 
-        self.disaster_service.persist_disasters_third_party(normalized, self.db)
+        self.disaster_service.persist_disasters_third_party(normalized)
 
     def run_gdacs(self):
         raw = self.gdacs_client.fetch_disasters()
 
         normalized = normalize_gdacs_response(raw)
 
-        self.disaster_service.persist_disasters_third_party(normalized, self.db)
+        self.disaster_service.persist_disasters_third_party(normalized)
