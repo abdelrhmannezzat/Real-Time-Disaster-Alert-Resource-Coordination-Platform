@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, APIRouter
 from fastapi_pagination import add_pagination
+from starlette.middleware.cors import CORSMiddleware
 
 from api.routes.auth_route import router as auth_router
 from api.routes.user_route import router as user_router
@@ -23,7 +24,15 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 add_pagination(app)
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",  # Vite dev server
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],   # IMPORTANT
+    allow_headers=["*"],   # IMPORTANT
+)
 
 v1_router = APIRouter(prefix="/api/v1")
 
