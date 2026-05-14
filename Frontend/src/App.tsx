@@ -11,7 +11,7 @@ import { useAuth } from "./hooks/useAuth";
 
 export default function App() {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
@@ -31,7 +31,16 @@ export default function App() {
             element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <AuthPage />}
           />
           <Route path="/create" element={<CreateDisasterPage />} />
-          <Route path="/admin" element={<AdminPage />} />
+          <Route
+            path="/admin"
+            element={
+              user?.role === "admin" ? (
+                <AdminPage />
+              ) : (
+                <Navigate to="/dashboard" replace />
+              )
+            }
+          />
           <Route path="/live" element={<LiveAlertsPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

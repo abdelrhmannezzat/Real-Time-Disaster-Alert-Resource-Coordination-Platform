@@ -14,7 +14,7 @@ interface HeaderProps {
 
 const links = [
   { to: "/dashboard", label: "Dashboard", icon: ShieldAlert },
-  { to: "/auth", label: "Auth", icon: LogIn },
+  { to: "/auth", label: "Login", icon: LogIn },
   { to: "/create", label: "Create Disaster", icon: Sparkles },
   { to: "/admin", label: "Admin", icon: Users },
   { to: "/live", label: "Live Alerts", icon: Bell },
@@ -23,9 +23,19 @@ const links = [
 export default function Header({ theme, setTheme }: HeaderProps) {
   const { user, isAuthenticated, logout } = useAuth();
   const { socketState, alerts, disconnect } = useWebSocket();
-  const visibleLinks = isAuthenticated
-  ? links.filter((link) => link.to !== "/auth")
-  : links;
+  const visibleLinks = links.filter((link) => {
+    // Hide Auth page when logged in
+    if (link.to === "/auth" && isAuthenticated) {
+      return false;
+    }
+
+    // Hide Admin page for non-admin users
+    if (link.to === "/admin" && user?.role !== "admin") {
+      return false;
+    }
+
+    return true;
+  });
 
   const handleLogout = () => {
     disconnect();

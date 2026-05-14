@@ -18,3 +18,6 @@ class IUserRepository(Protocol):
 
     def deactivate_user(self, user_id: int, db: Session):
         ...
+
+    def get_users(self, db: Session):
+        ...

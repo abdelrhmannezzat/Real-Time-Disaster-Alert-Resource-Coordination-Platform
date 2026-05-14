@@ -1,4 +1,5 @@
 from fastapi import Depends, HTTPException, status
+from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy.orm import Session
 
 from config.database import get_db
@@ -48,3 +49,14 @@ class UserRepository(IUserRepository):
 
         user.approved = False
         db.commit()
+
+    def get_users(self, db):
+        query = (
+            db.query(
+                User.id,
+                User.email,
+                User.approved,
+                User.role
+            )
+        )
+        return paginate(query)

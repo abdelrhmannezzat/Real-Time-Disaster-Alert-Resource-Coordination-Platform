@@ -14,3 +14,6 @@ class UserService:
 
     def deactivate_user(self, user_id: int):
         self.user_repository.deactivate_user(user_id, self.db)
+
+    def get_users(self):
+        return self.user_repository.get_users(self.db)

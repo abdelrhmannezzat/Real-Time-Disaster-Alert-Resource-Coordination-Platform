@@ -1,6 +1,7 @@
 import { apiRequest } from "./client";
 import { buildQueryString } from "../utils/network";
 import type { ApiPage } from "../types/api";
+import type { UserItem } from "../types/user";
 import type {
   AuthenticatedUser,
   LoginRequest,
@@ -81,4 +82,13 @@ export function getDisasterById(disasterId: string | number, token: string) {
   return apiRequest<unknown>(`${API_PREFIX}/disasters/${disasterId}`, {
     token,
   });
+}
+
+export function getUsers(page: number, token: string) {
+  return apiRequest<ApiPage<UserItem>>(
+    `${API_PREFIX}/users?page=${page}`,
+    {
+      token,
+    }
+  );
 }
