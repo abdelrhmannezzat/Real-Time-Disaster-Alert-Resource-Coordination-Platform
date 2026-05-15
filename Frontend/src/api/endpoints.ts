@@ -41,7 +41,7 @@ export function getNearbyDisasters(
     sev?: DisasterSeverity | "";
     typ?: DisasterType | "";
   },
-  token: string
+  token?: string
 ) {
   const qs = buildQueryString({
     lat: params.lat,
@@ -51,9 +51,10 @@ export function getNearbyDisasters(
     typ: params.typ,
   });
 
-  return apiRequest<NearbyDisastersResponse>(`${API_PREFIX}/disasters/nearby${qs}`, {
-    token,
-  });
+  return apiRequest<NearbyDisastersResponse>(
+    `${API_PREFIX}/disasters/nearby${qs}`,
+    token ? { token } : {}
+  );
 }
 
 export function createDisaster(payload: CreateDisasterRequest, token: string) {

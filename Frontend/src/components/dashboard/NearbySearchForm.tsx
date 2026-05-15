@@ -15,7 +15,6 @@ export interface NearbySearchFilters {
 
 interface NearbySearchFormProps {
   values: NearbySearchFilters;
-  disabled?: boolean;
   loading?: boolean;
   onChange: (field: keyof NearbySearchFilters, value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -24,7 +23,6 @@ interface NearbySearchFormProps {
 
 export default function NearbySearchForm({
   values,
-  disabled = false,
   loading = false,
   onChange,
   onSubmit,
@@ -38,28 +36,28 @@ export default function NearbySearchForm({
             label="Latitude"
             value={values.lat}
             onChange={(e) => onChange("lat", e.target.value)}
-            disabled={disabled}
+            disabled={loading}
             placeholder="30.0444"
           />
           <Input
             label="Longitude"
             value={values.lng}
             onChange={(e) => onChange("lng", e.target.value)}
-            disabled={disabled}
+            disabled={loading}
             placeholder="31.2357"
           />
           <Input
             label="Radius (km)"
             value={values.rad}
             onChange={(e) => onChange("rad", e.target.value)}
-            disabled={disabled}
+            disabled={loading}
             placeholder="50"
           />
           <Select
             label="Severity"
             value={values.sev}
             onChange={(e) => onChange("sev", e.target.value)}
-            disabled={disabled}
+            disabled={loading}
           >
             <option value="">All</option>
             <option value="low">Low</option>
@@ -71,7 +69,7 @@ export default function NearbySearchForm({
             label="Type"
             value={values.typ}
             onChange={(e) => onChange("typ", e.target.value)}
-            disabled={disabled}
+            disabled={loading}
           >
             <option value="">All</option>
             <option value="earthquake">Earthquake</option>
@@ -85,24 +83,18 @@ export default function NearbySearchForm({
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <Button type="submit" disabled={disabled || loading}>
+          <Button type="submit" disabled={loading}>
             <Search size={16} />
             {loading ? "Searching..." : "Search nearby"}
           </Button>
 
           {onUseLocation ? (
-            <Button type="button" variant="outline" onClick={onUseLocation} disabled={disabled || loading}>
+            <Button type="button" variant="outline" onClick={onUseLocation} disabled={loading}>
               Use my location
             </Button>
           ) : null}
         </div>
       </form>
-
-      {disabled ? (
-        <div className="mt-4 rounded-2xl bg-amber-50 p-4 text-sm text-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
-          Login first to call this protected endpoint.
-        </div>
-      ) : null}
     </Card>
   );
 }

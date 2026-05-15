@@ -62,6 +62,7 @@ class DisasterRepository(IDisasterRepository):
                 Disaster.title,
                 Disaster.description,
                 Disaster.severity,
+                Disaster.type,
                 Disaster.radius,
                 Location.longitude,
                 Location.latitude,

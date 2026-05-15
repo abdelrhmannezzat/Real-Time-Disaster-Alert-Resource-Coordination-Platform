@@ -29,11 +29,6 @@ export default function DashboardPage() {
   const searchNearby = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!token) {
-      setError("Login first to search nearby disasters.");
-      return;
-    }
-
     setLoading(true);
     setError("");
 
@@ -46,7 +41,7 @@ export default function DashboardPage() {
           sev: filters.sev as any,
           typ: filters.typ as any,
         },
-        token
+        token || undefined
       );
 
       setItems(extractPageItems<NearbyDisasterItem>(response));
@@ -91,7 +86,7 @@ export default function DashboardPage() {
       subtitle={
         user
           ? `Signed in as ${user.email}. Search nearby disasters and inspect real-time coordination data.`
-          : "Login to search and use the protected features."
+          : "Search nearby disasters without logging in."
       }
       actions={
         <>
@@ -125,7 +120,6 @@ export default function DashboardPage() {
 
       <NearbySearchForm
         values={filters}
-        disabled={!token}
         loading={loading}
         onChange={(field, value) => setFilters((prev) => ({ ...prev, [field]: value }))}
         onSubmit={searchNearby}
@@ -140,13 +134,51 @@ export default function DashboardPage() {
 
       <DisasterList items={items} loading={loading} />
 
-      <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-        <h3 className="text-base font-bold text-slate-900 dark:text-white">Search notes</h3>
+      <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
+        <h3 className="text-base font-bold text-slate-900 dark:text-white">
+          How nearby search works
+        </h3>
+
         <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-          The query below uses your PostGIS nearby endpoint. Default radius input is in kilometers.
+          This dashboard uses your location (or manually entered coordinates) to fetch active disasters within a selected radius using a geospatial query (PostGIS).
         </p>
-        <div className="mt-4 rounded-2xl bg-slate-100 p-4 text-sm text-slate-700 dark:bg-slate-900 dark:text-slate-300">
-          Example time field format used in your create page: {toDatetimeLocalValue()}
+
+        <div className="mt-5 grid gap-3 md:grid-cols-2">
+          <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-900">
+            <div className="text-sm font-semibold text-slate-900 dark:text-white">
+              Radius-based filtering
+            </div>
+            <div className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              Results are filtered using distance in kilometers from the selected point.
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-900">
+            <div className="text-sm font-semibold text-slate-900 dark:text-white">
+              Real-time updates
+            </div>
+            <div className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              Live alerts are streamed via WebSocket when new disasters are detected near you.
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-900">
+            <div className="text-sm font-semibold text-slate-900 dark:text-white">
+              Severity levels
+            </div>
+            <div className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              Disasters are classified as low, medium, high, or critical based on impact.
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-900">
+            <div className="text-sm font-semibold text-slate-900 dark:text-white">
+              Data freshness
+            </div>
+            <div className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              Results reflect the latest stored incidents and incoming real-time updates.
+            </div>
+          </div>
         </div>
       </div>
     </PageShell>

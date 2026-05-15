@@ -32,6 +32,11 @@ export default function DisasterList({ items, loading = false }: DisasterListPro
                 <div className="space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
                     <h4 className="font-bold text-slate-900 dark:text-white">{item.title}</h4>
+
+                    <Badge className="bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                      {formatEnumLabel(String(item.type))}
+                    </Badge>
+
                     <Badge className={cx("capitalize", severityBadgeClass(String(item.severity)))}>
                       {formatEnumLabel(String(item.severity))}
                     </Badge>

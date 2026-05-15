@@ -1,7 +1,7 @@
 from geoalchemy2 import Geography
 from pydantic import BaseModel
 
-from model.enums import DisasterSeverity
+from model.enums import DisasterSeverity, DisasterType
 
 
 class DisasterNearbyResponse(BaseModel):
@@ -9,6 +9,7 @@ class DisasterNearbyResponse(BaseModel):
     title: str
     description: str | None = None
     severity: DisasterSeverity
+    type: DisasterType
     radius: float
     latitude: float
     longitude: float
