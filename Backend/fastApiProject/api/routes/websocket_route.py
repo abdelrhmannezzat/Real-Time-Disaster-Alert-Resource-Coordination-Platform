@@ -8,6 +8,7 @@ from websocket.websocket_manager import manager
 router = APIRouter()
 
 
+# Websocket endpoint, only volunteer can access
 @router.websocket("/{user_id}")
 async def websocket_endpoint(
         websocket: WebSocket,

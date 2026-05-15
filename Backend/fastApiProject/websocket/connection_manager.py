@@ -1,7 +1,7 @@
 from fastapi import WebSocket
 from geopy.distance import geodesic
 
-
+# Hold WebSocket connections
 class ConnectionManager:
     def __init__(self):
         # maps user id to the websocket connection
