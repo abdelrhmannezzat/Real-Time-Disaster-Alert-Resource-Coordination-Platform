@@ -41,7 +41,16 @@ export default function App() {
               )
             }
           />
-          <Route path="/live" element={<LiveAlertsPage />} />
+          <Route
+            path="/live"
+            element={
+              user?.role === "volunteer" ? (
+                <LiveAlertsPage />
+              ) : (
+                <Navigate to="/dashboard" replace />
+              )
+            }
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>

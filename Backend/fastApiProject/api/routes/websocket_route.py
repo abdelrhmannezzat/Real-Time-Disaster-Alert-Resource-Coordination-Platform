@@ -1,14 +1,23 @@
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends
 
+from dependencies.auth import require_roles
+from model import User
+from model.enums import UserRole
 from websocket.websocket_manager import manager
 
 router = APIRouter()
 
 
 @router.websocket("/{user_id}")
-async def websocket_endpoint(websocket: WebSocket, user_id: int):
+async def websocket_endpoint(
+        websocket: WebSocket,
+        user_id: int,
+        lat: float,
+        lng: float,
+        _: User = Depends(require_roles(UserRole.VOLUNTEER))
+):
 
-    await manager.connect(user_id, websocket)
+    await manager.connect(user_id, websocket, lat, lng)
 
     try:
         while True:

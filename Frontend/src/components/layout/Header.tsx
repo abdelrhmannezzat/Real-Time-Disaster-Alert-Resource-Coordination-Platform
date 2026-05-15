@@ -23,6 +23,9 @@ const links = [
 export default function Header({ theme, setTheme }: HeaderProps) {
   const { user, isAuthenticated, logout } = useAuth();
   const { socketState, alerts, disconnect } = useWebSocket();
+  const isVolunteer = user?.role === "volunteer";
+  const isCoordinator = user?.role === "coordinator";
+  const isAdmin = user?.role === "admin";
   const visibleLinks = links.filter((link) => {
     // Hide Auth page when logged in
     if (link.to === "/auth" && isAuthenticated) {
@@ -30,7 +33,17 @@ export default function Header({ theme, setTheme }: HeaderProps) {
     }
 
     // Hide Admin page for non-admin users
-    if (link.to === "/admin" && user?.role !== "admin") {
+    if (link.to === "/admin" && !isAdmin) {
+      return false;
+    }
+
+    // Show Create Disaster only for coordinator
+    if (link.to === "/create" && !isCoordinator) {
+      return false;
+    }
+
+    // Only volunteers can see Live Alerts
+    if (link.to === "/live" && !isVolunteer) {
       return false;
     }
 
@@ -81,10 +94,15 @@ export default function Header({ theme, setTheme }: HeaderProps) {
           </nav>
 
           <div className="flex flex-wrap items-center gap-2">
-            <Badge className={socketStateBadgeClass(socketState)}>{socketState}</Badge>
-            <Badge className="bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
-              Alerts {alerts.length}
-            </Badge>
+            {isVolunteer ? (
+              <>
+                <Badge className={socketStateBadgeClass(socketState)}>{socketState}</Badge>
+                <Badge className="bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                  Alerts {alerts.length}
+                </Badge>
+              </>
+            ):(<></>)}
+            
 
             {isAuthenticated && user ? (
               <Badge className="bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300">

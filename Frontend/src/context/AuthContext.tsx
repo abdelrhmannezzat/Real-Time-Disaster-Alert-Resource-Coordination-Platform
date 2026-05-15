@@ -14,6 +14,13 @@ import type {
 const TOKEN_KEY = "disaster_platform_token";
 const USER_KEY = "disaster_platform_user";
 
+
+type JwtPayload = {
+  sub?: string;
+  role?: UserRole;
+  user_id?: number;
+};
+
 interface AuthContextValue {
   token: string;
   user: AuthenticatedUser | null;
@@ -48,11 +55,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!token || user) return;
 
-    const payload = decodeJwtPayload<{ sub?: string; role?: UserRole }>(token);
-    if (!payload) return;
+    const payload = decodeJwtPayload<JwtPayload>(token);
+
+    if (!payload || !payload.user_id) {
+      return;
+    }
 
     setUser({
-      id: 0,
+      id: payload.user_id,
       email: payload.sub ?? "",
       role: payload.role ?? "volunteer",
     });
@@ -61,11 +71,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function login(payload: LoginRequest) {
     const response = await loginUser(payload);
 
-    const decoded = decodeJwtPayload<{ sub?: string; role?: UserRole }>(response.access_token);
+    const decoded = decodeJwtPayload<JwtPayload>(response.access_token);
 
     setToken(response.access_token);
+
     setUser({
-      id: response.id,
+      id: decoded?.user_id ?? response.id,
       email: response.email,
       role: decoded?.role ?? "volunteer",
     });

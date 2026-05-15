@@ -1,23 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import PageShell from "../components/layout/PageShell";
 import LiveAlertsPanel from "../components/dashboard/LiveAlertsPanel";
 import { useAuth } from "../hooks/useAuth";
 import { useWebSocket } from "../hooks/useWebSocket";
+import { Navigate } from "react-router-dom";
+
 
 export default function LiveAlertsPage() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const { socketState, alerts, connect, disconnect, clearAlerts } = useWebSocket();
-
-  const [userId, setUserId] = useState("");
-
-  useEffect(() => {
-    if (user?.id) {
-      setUserId(String(user.id));
-    }
-  }, [user?.id]);
-
+  if (!isAuthenticated || user?.role !== "volunteer") {
+    return <Navigate to="/dashboard" replace />;
+  }
   return (
     <PageShell
       title="Live alerts"
@@ -34,10 +30,8 @@ export default function LiveAlertsPage() {
     >
       <LiveAlertsPanel
         socketState={socketState}
-        userId={userId}
         alerts={alerts}
-        onUserIdChange={setUserId}
-        onConnect={() => connect(userId)}
+        onConnect={connect}
         onDisconnect={disconnect}
         onClear={clearAlerts}
       />

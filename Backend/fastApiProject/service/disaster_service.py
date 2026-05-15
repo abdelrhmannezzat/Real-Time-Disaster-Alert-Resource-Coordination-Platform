@@ -28,7 +28,7 @@ class DisasterService:
             city=disaster.city,
             country=disaster.country
         )
-        loc = self.location_service.create_location(location_dto, self.db)
+        loc = self.location_service.create_location(location_dto)
         disaster = self.disaster_repo.create_disaster_manually(disaster, user_id, loc.id, self.db)
 
         payload = {

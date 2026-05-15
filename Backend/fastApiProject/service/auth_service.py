@@ -83,7 +83,7 @@ class AuthService:
                 detail="User is not approved"
             )
 
-        payload = {'sub': user.email, 'role': user.role}
+        payload = {'sub': user.email, 'role': user.role, 'user_id': user.id}
 
         user_res = UserLoginResponse(
             id=user.id,
