@@ -1,112 +1,134 @@
-# Real-Time-Disaster-Alert-Resource-Coordination-Platform
+# Real-Time Disaster Coordination & Alert Platform
 
+A real-time, event-driven system for disaster reporting, geospatial incident discovery, and live alert streaming. Built using FastAPI, WebSockets, and RabbitMQ to simulate a scalable distributed crisis-response architecture.
 
+---
 
-## Database Schema Code
+## Overview
 
-```
-Table disaster {
-  id integer [primary key]
-  created_by integer
-  title text
-  description text
-  type enum
-  severity enum
-  source enum [note: "Where you got the info from"]
-  status enum
-  radius float
-  location_id integer
-  external_id text
-  start_time timestamp [not null]
-  end_time timestamp
-  created_at timestamp
-  updated_at timestamp
-}
+This system demonstrates a backend architecture for handling real-time disaster events with:
 
-Table location {
-  id integer [primary key]
-  latitude decimal
-  longitude decimal
-  city text
-  country text
-  coordinates GEOGRAPHY
-  created_at timestamp
-  updated_at timestamp
-}
+- Event-driven communication
+- Real-time streaming
+- Geospatial querying for location-aware results
+- Role-based access control
+- Asynchronous background processing
 
+The focus is on building a **scalable distributed backend system** rather than a monolithic application.
 
-Table user {
-  id integer [primary key]
-  email text [unique]
-  password_hash text
-  role enum
-  created_at timestamp
-  updated_at timestamp
-}
+---
 
-Table volunteer_profile {
-  id integer [primary key]
-  user_id integer
-  status enum
-  location_id integer
-}
+## System Architecture
 
-Table assignment {
-  id integer [primary key]
-  description text
-  status enum
-  assigned_to integer [note: "volunteer id"]
-  assigned_by integer [note: "coordinator id"]
-  disaster_id integer
-  created_at timestamp
-  updated_at timestamp
-}
+The platform is composed of multiple loosely-coupled components:
 
+### FastAPI Backend
+- REST APIs for authentication, disaster operations, and user management
+- JWT-based authentication with role-based authorization
+- Core business logic and request orchestration
 
-Table resource {
-  id integer [primary key]
-  name text
-  type enum
-  quantity integer
-  status enum
-  assigned_by integer
-  location_id integer
-  disaster_id integer
-  created_at timestamp
-  updated_at timestamp
-}
+### RabbitMQ (CloudAMQP)
+- Message broker enabling event-driven communication
+- Asynchronous processing of disaster events
+- Decouples event production from consumption for scalability
 
-Table notification {
-  id integer [primary key]
-  user_id integer
-  type enum
-  title text
-  message text
-  is_read boolean
-  created_at timestamp
-  updated_at timestamp
-}
+### WebSocket Real-Time Layer
+- Persistent connections for live alert streaming
+- User-specific event delivery
+- Location-aware filtering of real-time updates
 
+### Geospatial Query Engine
+- Efficient radius-based querying for nearby incidents
+- Filtering by severity and disaster type
+- Location-aware data retrieval for real-time decision support
 
-Ref: "disaster"."location_id" - "location"."id"
+### React + TypeScript Frontend
+- Interactive dashboard for visualization and interaction
+- Live alerts monitoring interface
+- Authentication and role-based UI rendering
 
-Ref: "user"."id" < "assignment"."assigned_by"
+---
 
-Ref: "user"."id" < "resource"."assigned_by"
+## Key Features
 
-Ref: "location"."id" < "resource"."location_id"
+### 🔐 Authentication & Authorization
+- JWT-based authentication system
+- Role-based access control:
+  - Admin
+  - Coordinator
+  - Volunteer
+- Secure endpoint protection for sensitive operations
 
-Ref: "disaster"."id" < "resource"."disaster_id"
+---
 
-Ref: "volunteer_profile"."user_id" - "user"."id"
+### ⚡ Event-Driven Architecture
+- RabbitMQ-based asynchronous event processing (CloudAMQP)
+- Decoupled producer/consumer workflow
+- Scalable design for high-throughput event handling
 
-Ref: "volunteer_profile"."location_id" - "location"."id"
+---
 
-Ref: "notification"."user_id" > "user"."id"
+### 🌐 Real-Time Alert Streaming
+- WebSocket-based live communication layer
+- Instant delivery of disaster events to connected users
+- Session-based and user-aware broadcasting
 
-Ref: "assignment"."assigned_to" > "user"."id"
+---
 
-Ref: "user"."id" < "disaster"."id"
+### 📍 Location-Aware Disaster Discovery
+- Radius-based geospatial querying for nearby incidents
+- Filtering by severity and disaster type
+- Supports real-time situational awareness for users
 
-Ref: "location"."id" < "location"."longitude"
-```
+---
+
+## Tech Stack
+
+### Backend
+- FastAPI (Python)
+- RabbitMQ (CloudAMQP)
+- WebSockets
+- JWT Authentication
+- Asynchronous task processing
+
+### Frontend
+- React + TypeScript
+- TailwindCSS
+
+### System Design Concepts
+- Event-Driven Architecture
+- Distributed Systems Design
+- Real-Time Streaming Systems
+- Geospatial Data Processing
+- Producer–Consumer Messaging Pattern
+
+---
+
+## Project Flow
+
+1. Disaster event is created via API or internal trigger  
+2. Event is published to RabbitMQ (CloudAMQP)  
+3. Background consumers process and enrich event data  
+4. Processed events are broadcast via WebSockets  
+5. Connected clients receive real-time alerts  
+6. Users query nearby incidents using geospatial filters  
+
+---
+
+## Example Use Case
+
+- A disaster event occurs in a specific location  
+- Backend processes and classifies severity and type  
+- Volunteers connected via WebSockets receive instant alerts  
+- Users can query nearby disasters based on their location and radius  
+- Coordinators can create and manage disaster events in real time  
+
+---
+
+## Future Improvements
+
+- Volunteer assignment and task coordination system  
+- Disaster lifecycle management (active → resolved → archived)  
+- Guaranteed message delivery with retry mechanisms  
+- Observability layer (logging, metrics, monitoring dashboard)  
+- Containerization and production deployment (Docker + CI/CD)  
