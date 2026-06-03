@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from geoalchemy2 import Geography
 from pydantic import BaseModel
 
@@ -15,3 +17,4 @@ class DisasterNearbyResponse(BaseModel):
     longitude: float
     city: str | None = None
     country: str | None = None
+    start_time: datetime

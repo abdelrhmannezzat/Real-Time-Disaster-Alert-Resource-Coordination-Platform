@@ -40,6 +40,7 @@ export interface NearbyDisasterItem {
   status?: string | null;
   type?: string | null;
   distance?: number | string | null;
+  start_time?: string;
 }
 
 export type NearbyDisastersResponse = ApiPage<NearbyDisasterItem>;

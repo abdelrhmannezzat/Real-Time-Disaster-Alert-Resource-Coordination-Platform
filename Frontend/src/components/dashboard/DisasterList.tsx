@@ -4,6 +4,7 @@ import Card from "../common/Card";
 import Badge from "../common/Badge";
 import { cx } from "../../utils/classNames";
 import { formatCoordinate, formatEnumLabel, severityBadgeClass } from "../../utils/format";
+import { formatDistanceToNow } from "date-fns";
 
 interface DisasterListProps {
   items: NearbyDisasterItem[];
@@ -59,6 +60,11 @@ export default function DisasterList({ items, loading = false }: DisasterListPro
                     <span className="rounded-full bg-white px-3 py-1 dark:bg-slate-950">
                       {item.city || "Unknown city"}, {item.country || "Unknown country"}
                     </span>
+                    {item.start_time ? (
+                      <span className="rounded-full bg-white px-3 py-1 dark:bg-slate-950">
+                        {formatDistanceToNow(new Date(item.start_time), { addSuffix: true })}
+                      </span>
+                    ) : null}
                   </div>
                 </div>
 

@@ -37,22 +37,22 @@ class AuthService:
         new_user = self.user_repository.add_user(user, self.db)
 
         try:
-            if user.role == UserRole.VOLUNTEER:
-                # Create location
-                temp = reverse_geocode.search([(user.latitude, user.longitude)])
-                city = temp[0].get('city')
-                country = temp[0].get('country')
-
-                loc = Location(
-                    longitude=user.longitude,
-                    latitude=user.latitude,
-                    city=city,
-                    country=country,
-                    coordinates=WKTElement(f"POINT({user.longitude} {user.latitude})", srid=4326)
-                )
-                loc = self.location_service.create_location_no_commit(loc, self.db)
-                # Create volunteer profile
-                self.volunteer_profile_service.create_volunteer_profile(loc.id, new_user.id, self.db)
+            # if user.role == UserRole.VOLUNTEER:
+            #     # Create location
+            #     temp = reverse_geocode.search([(user.latitude, user.longitude)])
+            #     city = temp[0].get('city')
+            #     country = temp[0].get('country')
+            #
+            #     loc = Location(
+            #         longitude=user.longitude,
+            #         latitude=user.latitude,
+            #         city=city,
+            #         country=country,
+            #         coordinates=WKTElement(f"POINT({user.longitude} {user.latitude})", srid=4326)
+            #     )
+            #     loc = self.location_service.create_location_no_commit(loc, self.db)
+            #     # Create volunteer profile
+            #     self.volunteer_profile_service.create_volunteer_profile(loc.id, new_user.id, self.db)
             self.db.commit()
         except Exception as e:
             self.db.rollback()

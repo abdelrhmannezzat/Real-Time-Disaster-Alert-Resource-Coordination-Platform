@@ -18,7 +18,7 @@ export const WebSocketContext = createContext<WebSocketContextValue | null>(null
 
 export function WebSocketProvider({ children }: { children: ReactNode }) {
   const socketRef = useRef<WebSocket | null>(null);
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const userRef = useRef(user);
   const [socketState, setSocketState] = useState<SocketState>("disconnected");
   const [alerts, setAlerts] = useState<LiveAlert[]>([]);
@@ -85,13 +85,11 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
 
-        const wsUrl = toWebSocketUrl(
-          API_BASE_URL,
-          `${WS_PREFIX}/${userRef.current.id}`
-        );
+        const wsUrl = toWebSocketUrl(API_BASE_URL, WS_PREFIX);
         const url = new URL(wsUrl);
         url.searchParams.set("lat", String(lat));
         url.searchParams.set("lng", String(lng));
+        url.searchParams.set("token", token);
 
         const socket = new WebSocket(url.toString());
         socketRef.current = socket;

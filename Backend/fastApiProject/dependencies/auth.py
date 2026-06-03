@@ -7,13 +7,12 @@ from dependencies.location_dep import get_location_service
 from dependencies.volunteer_profile_dep import get_volunteer_profile_service
 from model import User
 from repository.user_repo import UserRepository
-from repository.volunteer_profile_repo import VolunteerProfileRepository
 from service.auth_service import AuthService
 from service.location_service import LocationService
 from service.volunteer_profile_service import VolunteerProfileService
 from utils import jwt
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/api/v1/auth/login') # tokenurl is just for documentation
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/api/v1/auth/login')  # tokenurl is just for documentation
 
 
 def get_current_user(
