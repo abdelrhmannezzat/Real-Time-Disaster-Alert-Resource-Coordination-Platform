@@ -16,7 +16,7 @@ public class Disaster {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(name = "created_by", nullable = true)
+    @JoinColumn(name = "created_by_user_id", nullable = true)
     @ManyToOne(fetch = FetchType.EAGER)
     private User createdBy;
 
