@@ -3,11 +3,13 @@ package com.example.disaster_live_alerts.model;
 
 import com.example.disaster_live_alerts.enums.UserRole;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
+@Data
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
