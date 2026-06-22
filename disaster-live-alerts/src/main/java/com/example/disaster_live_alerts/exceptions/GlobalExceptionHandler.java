@@ -19,4 +19,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
+    @ExceptionHandler(InvalidCredentials.class)
+    public ResponseEntity<?> handleInvalidCredentials(InvalidCredentials e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+    @ExceptionHandler(UserNotActiveException.class)
+    public ResponseEntity<?> handleInvalidCredentials(UserNotActiveException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
 }

@@ -23,11 +23,11 @@ public class User {
     private UserRole role;
 
     @Column(name = "is_active")
-    private Boolean isActive;
+    private Boolean isActive = false;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt = LocalDateTime.now();
 }
