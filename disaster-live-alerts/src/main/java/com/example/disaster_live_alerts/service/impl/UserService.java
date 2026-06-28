@@ -1,5 +1,6 @@
 package com.example.disaster_live_alerts.service.impl;
 
+import com.example.disaster_live_alerts.dto.UserActivationDto;
 import com.example.disaster_live_alerts.dto.UserLoginDto;
 import com.example.disaster_live_alerts.dto.UserRegistrationDto;
 import com.example.disaster_live_alerts.dto.UserResponseDto;
@@ -10,6 +11,8 @@ import com.example.disaster_live_alerts.exceptions.UserNotActiveException;
 import com.example.disaster_live_alerts.model.User;
 import com.example.disaster_live_alerts.repo.UserRepository;
 import com.example.disaster_live_alerts.service.IUserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +57,7 @@ public class UserService implements IUserService {
 
     @Override
     public UserResponseDto login(UserLoginDto userLoginDto) {
-        //TODO: implement login logic using bcrypt + Spring Security
+        //TODO: implement login logic using bcrypt + Spring Security + JWT
         User user = userRepository.findByEmail(userLoginDto.getEmail())
                 .orElseThrow(() -> new InvalidCredentials("Invalid email or password"));
 
@@ -72,4 +75,11 @@ public class UserService implements IUserService {
                 .userRole(user.getRole())
                 .build();
     }
+
+    @Override
+    public Page<UserActivationDto> getUsersPaginated(Pageable pageable) {
+        return userRepository.findAllPaginated(pageable);
+    }
+
+
 }
