@@ -1,5 +1,8 @@
 package com.example.disaster_live_alerts.service;
 
-public interface IDisasterService {
+import com.example.disaster_live_alerts.dto.DisasterCreateRequestDto;
+import com.example.disaster_live_alerts.dto.DisasterCreateResponseDto;
 
+public interface IDisasterService {
+    DisasterCreateResponseDto createDisasterManually(DisasterCreateRequestDto disasterCreateRequestDto);
 }

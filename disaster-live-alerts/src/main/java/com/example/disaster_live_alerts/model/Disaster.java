@@ -6,11 +6,19 @@ import com.example.disaster_live_alerts.enums.DisasterSource;
 import com.example.disaster_live_alerts.enums.DisasterStatus;
 import com.example.disaster_live_alerts.enums.DisasterType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "disaster")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Disaster {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

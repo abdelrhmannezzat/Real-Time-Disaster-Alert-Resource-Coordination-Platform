@@ -1,0 +1,18 @@
+package com.example.disaster_live_alerts.dto;
+
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class LocationDto {
+    private Double longitude;
+    private Double latitude;
+    private String country;
+    private String city;
+}
