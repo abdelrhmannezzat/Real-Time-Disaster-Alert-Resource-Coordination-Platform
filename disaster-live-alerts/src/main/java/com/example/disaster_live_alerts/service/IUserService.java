@@ -1,9 +1,6 @@
 package com.example.disaster_live_alerts.service;
 
-import com.example.disaster_live_alerts.dto.UserActivationDto;
-import com.example.disaster_live_alerts.dto.UserLoginDto;
-import com.example.disaster_live_alerts.dto.UserRegistrationDto;
-import com.example.disaster_live_alerts.dto.UserResponseDto;
+import com.example.disaster_live_alerts.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,7 +11,7 @@ public interface IUserService {
 
     UserResponseDto createUser(UserRegistrationDto userRegistrationDto);
 
-    UserResponseDto login(UserLoginDto userLoginDto);
+    UserLoginResponseDto login(UserLoginDto userLoginDto);
 
     Page<UserActivationDto> getUsersPaginated(Pageable pageable);
 }

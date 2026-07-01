@@ -1,15 +1,18 @@
 package com.example.disaster_live_alerts.dto;
 
-import com.example.disaster_live_alerts.enums.UserRole;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class UserRegistrationDto {
+@Builder
+public class UserLoginResponseDto {
+    private Long id;
     private String email;
-    private String password;
-    private UserRole role;
+    private String accessToken;
+    private String type;
 }

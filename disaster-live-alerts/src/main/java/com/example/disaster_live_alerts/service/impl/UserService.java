@@ -1,18 +1,20 @@
 package com.example.disaster_live_alerts.service.impl;
 
-import com.example.disaster_live_alerts.dto.UserActivationDto;
-import com.example.disaster_live_alerts.dto.UserLoginDto;
-import com.example.disaster_live_alerts.dto.UserRegistrationDto;
-import com.example.disaster_live_alerts.dto.UserResponseDto;
+import com.example.disaster_live_alerts.dto.*;
 import com.example.disaster_live_alerts.exceptions.InvalidCredentials;
 import com.example.disaster_live_alerts.exceptions.NoSuchUserExistsException;
 import com.example.disaster_live_alerts.exceptions.UserAlreadyExistsException;
 import com.example.disaster_live_alerts.exceptions.UserNotActiveException;
 import com.example.disaster_live_alerts.model.User;
 import com.example.disaster_live_alerts.repo.UserRepository;
+import com.example.disaster_live_alerts.security.CustomUserDetails;
+import com.example.disaster_live_alerts.security.services.JwtService;
 import com.example.disaster_live_alerts.service.IUserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    private final JwtService jwtService;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -46,7 +51,7 @@ public class UserService implements IUserService {
         User user = new User();
         user.setEmail(userRegistrationDto.getEmail());
         user.setPassword(this.passwordEncoder.encode(userRegistrationDto.getPassword()));
-        user.setRole(userRegistrationDto.getUserRole());
+        user.setRole(userRegistrationDto.getRole());
         User savedUser = userRepository.save(user);
         return UserResponseDto.builder()
                 .id(savedUser.getId())
@@ -56,12 +61,11 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserResponseDto login(UserLoginDto userLoginDto) {
-        //TODO: implement login logic using bcrypt + Spring Security + JWT
+    public UserLoginResponseDto login(UserLoginDto userLoginDto) {
         User user = userRepository.findByEmail(userLoginDto.getEmail())
                 .orElseThrow(() -> new InvalidCredentials("Invalid email or password"));
 
-        if (!passwordEncoder.matches(user.getPassword(), userLoginDto.getPassword())) {
+        if (!passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword())) {
             throw new InvalidCredentials("The email or password is incorrect");
         }
 
@@ -69,10 +73,11 @@ public class UserService implements IUserService {
             throw new UserNotActiveException("User is not active");
         }
 
-        return UserResponseDto.builder()
+        return UserLoginResponseDto.builder()
                 .id(user.getId())
                 .email(user.getEmail())
-                .userRole(user.getRole())
+                .accessToken(jwtService.generateToken(user))
+                .type("bearer")
                 .build();
     }
 

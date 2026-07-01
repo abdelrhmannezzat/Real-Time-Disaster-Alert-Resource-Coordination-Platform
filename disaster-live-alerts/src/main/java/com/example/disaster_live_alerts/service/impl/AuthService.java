@@ -1,6 +1,7 @@
 package com.example.disaster_live_alerts.service.impl;
 
 import com.example.disaster_live_alerts.dto.UserLoginDto;
+import com.example.disaster_live_alerts.dto.UserLoginResponseDto;
 import com.example.disaster_live_alerts.dto.UserRegistrationDto;
 import com.example.disaster_live_alerts.dto.UserResponseDto;
 import com.example.disaster_live_alerts.service.IAuthService;
@@ -22,7 +23,7 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public UserResponseDto login(UserLoginDto userLoginDto) {
+    public UserLoginResponseDto login(UserLoginDto userLoginDto) {
         return userService.login(userLoginDto);
     }
 }

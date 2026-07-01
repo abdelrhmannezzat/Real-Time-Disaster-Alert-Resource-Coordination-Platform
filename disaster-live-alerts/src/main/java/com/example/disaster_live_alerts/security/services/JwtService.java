@@ -1,6 +1,7 @@
 package com.example.disaster_live_alerts.security.services;
 
 
+import com.example.disaster_live_alerts.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -29,10 +30,11 @@ public class JwtService {
     }
 
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", userDetails.getAuthorities());
-        return buildToken(claims, userDetails.getUsername());
+        claims.put("role", user.getRole());
+        claims.put("user_id", user.getId());
+        return buildToken(claims, user.getEmail());
     }
 
     private String buildToken(Map<String, Object> claims, String email) {
