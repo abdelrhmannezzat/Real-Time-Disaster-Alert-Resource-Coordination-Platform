@@ -7,6 +7,7 @@ import com.example.disaster_live_alerts.model.Disaster;
 import com.example.disaster_live_alerts.model.Location;
 import com.example.disaster_live_alerts.repo.DisasterRepository;
 import com.example.disaster_live_alerts.service.IDisasterService;
+import com.example.disaster_live_alerts.service.ILocationService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

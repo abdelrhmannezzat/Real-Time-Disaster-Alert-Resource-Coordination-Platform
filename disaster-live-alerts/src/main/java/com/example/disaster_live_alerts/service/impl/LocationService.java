@@ -3,10 +3,11 @@ package com.example.disaster_live_alerts.service.impl;
 import com.example.disaster_live_alerts.dto.LocationDto;
 import com.example.disaster_live_alerts.model.Location;
 import com.example.disaster_live_alerts.repo.LocationRepository;
+import com.example.disaster_live_alerts.service.ILocationService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LocationService implements ILocationService{
+public class LocationService implements ILocationService {
     private final LocationRepository locationRepository;
 
     public LocationService(LocationRepository locationRepository) {

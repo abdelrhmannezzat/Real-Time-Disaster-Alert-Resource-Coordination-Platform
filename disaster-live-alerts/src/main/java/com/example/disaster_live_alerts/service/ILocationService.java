@@ -1,4 +1,4 @@
-package com.example.disaster_live_alerts.service.impl;
+package com.example.disaster_live_alerts.service;
 
 import com.example.disaster_live_alerts.dto.LocationDto;
 import com.example.disaster_live_alerts.model.Location;
