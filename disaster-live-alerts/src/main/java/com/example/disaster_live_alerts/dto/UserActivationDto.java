@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 public class UserActivationDto {
     private Long id;
     private String email;
-    private Boolean isActive;
-    private UserRole userRole;
+    private Boolean approved;
+    private UserRole role;
 }
