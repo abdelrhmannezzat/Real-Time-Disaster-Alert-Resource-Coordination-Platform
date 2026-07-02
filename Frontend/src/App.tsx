@@ -34,7 +34,7 @@ export default function App() {
           <Route
             path="/admin"
             element={
-              user?.role === "admin" ? (
+              user?.role === "ADMIN" ? (
                 <AdminPage />
               ) : (
                 <Navigate to="/dashboard" replace />
@@ -44,7 +44,7 @@ export default function App() {
           <Route
             path="/live"
             element={
-              user?.role === "volunteer" ? (
+              user?.role === "VOLUNTEER" ? (
                 <LiveAlertsPage />
               ) : (
                 <Navigate to="/dashboard" replace />

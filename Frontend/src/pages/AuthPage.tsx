@@ -17,7 +17,7 @@ export default function AuthPage() {
 
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
-  const [registerRole, setRegisterRole] = useState<UserRole>("volunteer");
+  const [registerRole, setRegisterRole] = useState<UserRole>("VOLUNTEER");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

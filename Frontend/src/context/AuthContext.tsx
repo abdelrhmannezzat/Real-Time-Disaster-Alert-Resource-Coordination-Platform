@@ -64,21 +64,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser({
       id: payload.user_id,
       email: payload.sub ?? "",
-      role: payload.role ?? "volunteer",
+      role: payload.role ?? "VOLUNTEER",
     });
   }, [token, user]);
 
   async function login(payload: LoginRequest) {
     const response = await loginUser(payload);
 
-    const decoded = decodeJwtPayload<JwtPayload>(response.access_token);
+    const decoded = decodeJwtPayload<JwtPayload>(response.accessToken);
 
-    setToken(response.access_token);
+    setToken(response.accessToken);
 
     setUser({
       id: decoded?.user_id ?? response.id,
       email: response.email,
-      role: decoded?.role ?? "volunteer",
+      role: decoded?.role ?? "VOLUNTEER",
     });
 
     return response;

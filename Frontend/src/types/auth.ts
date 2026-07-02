@@ -1,4 +1,4 @@
-export type UserRole = "admin" | "coordinator" | "volunteer";
+export type UserRole = "ADMIN" | "COORDINATOR" | "VOLUNTEER";
 
 export interface AuthenticatedUser {
   id: number;
@@ -18,7 +18,7 @@ export interface RegisterRequest extends LoginRequest {
 export interface LoginResponse {
   id: number;
   email: string;
-  access_token: string;
+  accessToken: string;
   type: string;
 }
 

@@ -90,7 +90,7 @@ export default function DashboardPage() {
       }
       actions={
         <>
-          {user?.role === "volunteer" && (
+          {user?.role === "VOLUNTEER" && (
             <Link
               to="/live"
               className="inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white dark:bg-white dark:text-slate-950"
@@ -100,7 +100,7 @@ export default function DashboardPage() {
             </Link>
           )}
 
-          {user?.role === "coordinator" && (
+          {user?.role === "COORDINATOR" && (
             <Link
               to="/create"
               className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-900 dark:border-slate-700 dark:text-slate-100"

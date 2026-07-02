@@ -11,7 +11,7 @@ import { Navigate } from "react-router-dom";
 export default function LiveAlertsPage() {
   const { user, isAuthenticated } = useAuth();
   const { socketState, alerts, connect, disconnect, clearAlerts } = useWebSocket();
-  if (!isAuthenticated || user?.role !== "volunteer") {
+  if (!isAuthenticated || user?.role !== "VOLUNTEER") {
     return <Navigate to="/dashboard" replace />;
   }
   return (

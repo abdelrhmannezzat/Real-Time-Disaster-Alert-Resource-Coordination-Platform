@@ -21,10 +21,10 @@ import { formatEnumLabel } from "../utils/format";
 export default function AdminPage() {
   const { token, user } = useAuth();
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
 
   const [data, setData] = useState<ApiPage<UserItem>>({
-    items: [],
+    content: [],
   });
 
   const [loading, setLoading] = useState(false);
@@ -33,7 +33,7 @@ export default function AdminPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const canManageUsers = user?.role === "admin";
+  const canManageUsers = user?.role === "ADMIN";
 
   useEffect(() => {
     if (!token || !canManageUsers) return;
@@ -125,7 +125,7 @@ export default function AdminPage() {
               </thead>
 
               <tbody>
-                {data.items.map((u) => (
+                {data.content.map((u) => (
                   <tr
                     key={u.id}
                     className="border-b border-slate-100 dark:border-slate-900"

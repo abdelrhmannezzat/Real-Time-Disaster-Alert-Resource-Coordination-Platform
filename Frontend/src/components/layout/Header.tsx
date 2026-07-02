@@ -23,9 +23,9 @@ const links = [
 export default function Header({ theme, setTheme }: HeaderProps) {
   const { user, isAuthenticated, logout } = useAuth();
   const { socketState, alerts, disconnect } = useWebSocket();
-  const isVolunteer = user?.role === "volunteer";
-  const isCoordinator = user?.role === "coordinator";
-  const isAdmin = user?.role === "admin";
+  const isVolunteer = user?.role === "VOLUNTEER";
+  const isCoordinator = user?.role === "COORDINATOR";
+  const isAdmin = user?.role === "ADMIN";
   const visibleLinks = links.filter((link) => {
     // Hide Auth page when logged in
     if (link.to === "/auth" && isAuthenticated) {

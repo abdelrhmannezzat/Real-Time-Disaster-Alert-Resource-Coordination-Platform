@@ -51,9 +51,9 @@ export default function RegisterForm({
           placeholder="••••••••"
         />
         <Select label="Role" value={role} onChange={(e) => onRoleChange(e.target.value as UserRole)}>
-          <option value="volunteer">Volunteer</option>
-          <option value="coordinator">Coordinator</option>
-          <option value="admin">Admin</option>
+          <option value="VOLUNTEER">Volunteer</option>
+          <option value="COORDINATOR">Coordinator</option>
+          <option value="ADMIN">Admin</option>
         </Select>
 
         {error ? (
