@@ -54,8 +54,8 @@ export default function DashboardPage() {
 
   const stats = useMemo(() => {
     const total = items.length;
-    const high = items.filter((item) => String(item.severity).toLowerCase() === "high").length;
-    const critical = items.filter((item) => String(item.severity).toLowerCase() === "critical").length;
+    const high = items.filter((item) => String(item.severity) === "HIGH").length;
+    const critical = items.filter((item) => String(item.severity) === "CRITICAL").length;
 
     return { total, high, critical };
   }, [items]);

@@ -85,17 +85,12 @@ public class DisasterService implements IDisasterService {
     }
 
     @Override
-    public Page<DisasterNearbyResponseDto> getNearbyDisasters(Double lat, Double lng, Double rad, DisasterSeverity sev, DisasterType typ, Pageable pageable) {
-        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
-
-        Point point = geometryFactory.createPoint(
-                new Coordinate(
-                        lng,
-                        lat
-                )
-        );
-
-
-        return null;
+    public Page<DisasterNearbyResponseDto> getNearbyDisasters(Double lat,
+                                                              Double lng,
+                                                              Double rad,
+                                                              DisasterSeverity sev,
+                                                              DisasterType typ,
+                                                              Pageable pageable) {
+        return disasterRepository.getNearbyDisasters(lat,lng, rad, sev, typ, pageable);
     }
 }

@@ -2,7 +2,6 @@ export function formatEnumLabel(value?: string | null) {
   if (!value) return "—";
   return value
     .replace(/_/g, " ")
-    .toLowerCase()
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
@@ -14,14 +13,14 @@ export function formatCoordinate(value?: number | string | null) {
 }
 
 export function severityBadgeClass(severity?: string | null) {
-  switch ((severity || "").toLowerCase()) {
-    case "critical":
+  switch ((severity || "")) {
+    case "CRITICAL":
       return "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300";
-    case "high":
+    case "HIGH":
       return "bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300";
-    case "medium":
+    case "MEDIUM":
       return "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300";
-    case "low":
+    case "lOW":
       return "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300";
     default:
       return "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300";
@@ -29,12 +28,12 @@ export function severityBadgeClass(severity?: string | null) {
 }
 
 export function statusBadgeClass(status?: string | null) {
-  switch ((status || "").toLowerCase()) {
-    case "active":
+  switch ((status || "")) {
+    case "ACTIVE":
       return "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300";
-    case "monitoring":
+    case "MONITORING":
       return "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300";
-    case "resolved":
+    case "RESOLVED":
       return "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300";
     default:
       return "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300";

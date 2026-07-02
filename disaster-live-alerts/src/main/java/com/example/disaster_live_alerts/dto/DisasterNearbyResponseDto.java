@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -25,5 +25,5 @@ public class DisasterNearbyResponseDto {
     private Double longitude;
     private String city;
     private String country;
-    private LocalDate startTime;
+    private LocalDateTime startTime;
 }
