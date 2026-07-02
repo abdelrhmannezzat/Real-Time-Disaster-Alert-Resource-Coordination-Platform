@@ -2,6 +2,7 @@ package com.example.disaster_live_alerts.controller;
 
 import com.example.disaster_live_alerts.dto.DisasterCreateRequestDto;
 import com.example.disaster_live_alerts.dto.DisasterCreateResponseDto;
+import com.example.disaster_live_alerts.dto.DisasterFetchResponseDto;
 import com.example.disaster_live_alerts.dto.DisasterNearbyResponseDto;
 import com.example.disaster_live_alerts.enums.DisasterSeverity;
 import com.example.disaster_live_alerts.enums.DisasterType;
@@ -22,6 +23,11 @@ public class DisasterController {
 
     public DisasterController(IDisasterService disasterService) {
         this.disasterService = disasterService;
+    }
+
+    @GetMapping("/{disaster_id}")
+    public ResponseEntity<DisasterFetchResponseDto> getDisaster(@PathVariable Long disaster_id) {
+        return ResponseEntity.ok(disasterService.getDisaster(disaster_id));
     }
 
     @PostMapping("")

@@ -1,9 +1,6 @@
 package com.example.disaster_live_alerts.service.impl;
 
-import com.example.disaster_live_alerts.dto.DisasterCreateRequestDto;
-import com.example.disaster_live_alerts.dto.DisasterCreateResponseDto;
-import com.example.disaster_live_alerts.dto.DisasterNearbyResponseDto;
-import com.example.disaster_live_alerts.dto.LocationDto;
+import com.example.disaster_live_alerts.dto.*;
 import com.example.disaster_live_alerts.enums.DisasterSeverity;
 import com.example.disaster_live_alerts.enums.DisasterSource;
 import com.example.disaster_live_alerts.enums.DisasterType;
@@ -92,5 +89,11 @@ public class DisasterService implements IDisasterService {
                                                               DisasterType typ,
                                                               Pageable pageable) {
         return disasterRepository.getNearbyDisasters(lat,lng, rad, sev, typ, pageable);
+    }
+
+    @Override
+    public DisasterFetchResponseDto getDisaster(Long disasterId) {
+        return disasterRepository.getDisasterById(disasterId)
+                .orElseThrow(() -> new RuntimeException("Disaster not found"));
     }
 }

@@ -1,5 +1,6 @@
 package com.example.disaster_live_alerts.repo;
 
+import com.example.disaster_live_alerts.dto.DisasterFetchResponseDto;
 import com.example.disaster_live_alerts.dto.DisasterNearbyResponseDto;
 import com.example.disaster_live_alerts.enums.DisasterSeverity;
 import com.example.disaster_live_alerts.enums.DisasterType;
@@ -8,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.Optional;
 
 public interface DisasterRepository extends JpaRepository<Disaster, Long> {
 
@@ -44,4 +47,25 @@ public interface DisasterRepository extends JpaRepository<Disaster, Long> {
                                                        DisasterSeverity sev,
                                                        DisasterType typ,
                                                        Pageable pageable);
+
+
+    @Query("""
+    SELECT new com.example.disaster_live_alerts.dto.DisasterFetchResponseDto(
+        d.id,
+        d.createdBy.id,
+        d.title,
+        d.description,
+        d.severity,
+        d.source,
+        d.status,
+        d.radius,
+        d.startTime,
+        d.endTime,
+        d.location.city,
+        d.location.country
+    )
+    FROM Disaster d
+    WHERE d.id = :disasterId
+    """)
+    Optional<DisasterFetchResponseDto> getDisasterById(Long disasterId);
 }
