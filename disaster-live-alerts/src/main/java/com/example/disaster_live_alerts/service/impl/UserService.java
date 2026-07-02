@@ -38,6 +38,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional
     public void deactivateUser(int userId) {
         userRepository.setIsActive(userId, false);
     }
@@ -84,6 +85,12 @@ public class UserService implements IUserService {
     @Override
     public Page<UserActivationDto> getUsersPaginated(Pageable pageable) {
         return userRepository.findAllPaginated(pageable);
+    }
+
+    @Override
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchUserExistsException("User not found"));
     }
 
 

@@ -1,27 +1,29 @@
 package com.example.disaster_live_alerts.dto;
 
+
 import com.example.disaster_live_alerts.enums.DisasterSeverity;
-import com.example.disaster_live_alerts.enums.DisasterStatus;
 import com.example.disaster_live_alerts.enums.DisasterType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class DisasterCreateResponseDto {
+public class DisasterNearbyResponseDto {
     private Long id;
     private String title;
     private String description;
-    private DisasterType type;
     private DisasterSeverity severity;
-    private DisasterStatus status;
+    private DisasterType type;
     private Double radius;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private Double latitude;
+    private Double longitude;
+    private String city;
+    private String country;
+    private LocalDate startTime;
 }

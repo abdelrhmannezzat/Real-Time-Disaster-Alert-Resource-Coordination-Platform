@@ -60,9 +60,9 @@ export default function DisasterList({ items, loading = false }: DisasterListPro
                     <span className="rounded-full bg-white px-3 py-1 dark:bg-slate-950">
                       {item.city || "Unknown city"}, {item.country || "Unknown country"}
                     </span>
-                    {item.start_time ? (
+                    {item.startTime ? (
                       <span className="rounded-full bg-white px-3 py-1 dark:bg-slate-950">
-                        {formatDistanceToNow(new Date(item.start_time), { addSuffix: true })}
+                        {formatDistanceToNow(new Date(item.startTime), { addSuffix: true })}
                       </span>
                     ) : null}
                   </div>

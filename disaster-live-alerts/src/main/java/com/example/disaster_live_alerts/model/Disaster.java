@@ -34,15 +34,19 @@ public class Disaster {
     private String description;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private DisasterType type;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private DisasterSeverity severity;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private DisasterSource source;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private DisasterStatus status;
 
     @Column(nullable = false)
@@ -51,7 +55,7 @@ public class Disaster {
     @OneToOne(fetch = FetchType.EAGER)
     private Location location;
 
-    @Column(name = "external_id", nullable = false, unique = true)
+    @Column(name = "external_id", nullable = true, unique = true)
     private String externalId;
 
     @Column(name = "start_time", nullable = false)
@@ -60,9 +64,11 @@ public class Disaster {
     @Column(name = "end_time", nullable = true)
     private LocalDateTime endTime;
 
+    @Builder.Default
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Builder.Default
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
 }

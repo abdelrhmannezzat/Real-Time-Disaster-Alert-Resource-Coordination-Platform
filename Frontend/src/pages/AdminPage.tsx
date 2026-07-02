@@ -59,6 +59,7 @@ export default function AdminPage() {
 
   async function handleAction(
     userId: number,
+    userEmail: string,
     mode: "activate" | "deactivate"
   ) {
     if (!token) return;
@@ -74,7 +75,7 @@ export default function AdminPage() {
         await deactivateUser(userId, token);
       }
 
-      setSuccess(`User ${userId} ${mode}d successfully.`);
+      setSuccess(`${userEmail} ${mode}d successfully.`);
 
       await fetchUsers();
     } catch (err) {
@@ -157,7 +158,7 @@ export default function AdminPage() {
                             u.approved || actionLoading === u.id
                           }
                           onClick={() =>
-                            handleAction(u.id, "activate")
+                            handleAction(u.id, u.email, "activate")
                           }
                         >
                           <CheckCircle2 size={16} />
@@ -170,7 +171,7 @@ export default function AdminPage() {
                             !u.approved || actionLoading === u.id
                           }
                           onClick={() =>
-                            handleAction(u.id, "deactivate")
+                            handleAction(u.id, u.email, "deactivate")
                           }
                         >
                           <XCircle size={16} />
@@ -195,7 +196,7 @@ export default function AdminPage() {
           </Button>
 
           {Array.from(
-            { length: data.pages ?? 1 },
+            { length: data.pages ?? 0 },
             (_, index) => (
               <Button
                 key={index + 1}
@@ -211,7 +212,7 @@ export default function AdminPage() {
 
           <Button
             variant="outline"
-            disabled={page >= (data.pages ?? 1)}
+            disabled={page >= (data.pages ?? 0)}
             onClick={() => setPage((p) => p + 1)}
           >
             Next

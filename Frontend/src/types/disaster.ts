@@ -1,16 +1,16 @@
 import type { ApiPage } from "./api";
 
 export type DisasterType =
-  | "earthquake"
-  | "flood"
-  | "fire"
-  | "storm"
-  | "volcano"
-  | "landslide"
-  | "other";
+  | "EARTHQUAKE"
+  | "FLOOD"
+  | "FIRE"
+  | "STORM"
+  | "VOLCANO"
+  | "LANDSLIDE"
+  | "OTHER";
 
-export type DisasterSeverity = "low" | "medium" | "high" | "critical";
-export type DisasterStatus = "active" | "monitoring" | "resolved";
+export type DisasterSeverity = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+export type DisasterStatus = "ACTIVE" | "MONITORING" | "RESOLVED";
 
 export interface CreateDisasterRequest {
   title: string;
@@ -19,8 +19,8 @@ export interface CreateDisasterRequest {
   severity: DisasterSeverity;
   status: DisasterStatus;
   radius: number;
-  start_time: string;
-  end_time: string | null;
+  startTime: string;
+  endTime: string | null;
   latitude: number;
   longitude: number;
   city: string | null;
@@ -40,7 +40,7 @@ export interface NearbyDisasterItem {
   status?: string | null;
   type?: string | null;
   distance?: number | string | null;
-  start_time?: string;
+  startTime?: string;
 }
 
 export type NearbyDisastersResponse = ApiPage<NearbyDisasterItem>;

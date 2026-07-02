@@ -72,13 +72,13 @@ export default function NearbySearchForm({
             disabled={loading}
           >
             <option value="">All</option>
-            <option value="earthquake">Earthquake</option>
-            <option value="flood">Flood</option>
-            <option value="fire">Fire</option>
-            <option value="storm">Storm</option>
-            <option value="volcano">Volcano</option>
-            <option value="landslide">Landslide</option>
-            <option value="other">Other</option>
+            <option value="EARTHQUAKE">Earthquake</option>
+            <option value="FLOOD">Flood</option>
+            <option value="FIRE">Fire</option>
+            <option value="STORM">Storm</option>
+            <option value="VOLCANO">Volcano</option>
+            <option value="LANDSLIDE">Landslide</option>
+            <option value="OTHER">Other</option>
           </Select>
         </div>
 

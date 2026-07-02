@@ -32,9 +32,11 @@ public class Location {
     @Column(name = "coordinates", columnDefinition = "geography(Point, 4326)")
     private Point coordinates;
 
+    @Builder.Default
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Builder.Default
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
 }

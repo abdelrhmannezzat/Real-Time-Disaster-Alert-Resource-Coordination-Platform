@@ -17,12 +17,12 @@ export default function CreateDisasterPage() {
   const [form, setForm] = useState({
     title: "",
     description: "",
-    type: "earthquake" as DisasterType,
-    severity: "low" as DisasterSeverity,
-    status: "active" as DisasterStatus,
+    type: "EARTHQUAKE" as DisasterType,
+    severity: "LOW" as DisasterSeverity,
+    status: "ACTIVE" as DisasterStatus,
     radius: "50",
-    start_time: toDatetimeLocalValue(),
-    end_time: "",
+    startTime: toDatetimeLocalValue(),
+    endTime: "",
     latitude: "",
     longitude: "",
     city: "",
@@ -72,8 +72,8 @@ export default function CreateDisasterPage() {
       severity: form.severity,
       status: form.status,
       radius: Number(form.radius),
-      start_time: new Date(form.start_time).toISOString(),
-      end_time: form.end_time ? new Date(form.end_time).toISOString() : null,
+      startTime: new Date(form.startTime).toISOString(),
+      endTime: form.endTime ? new Date(form.endTime).toISOString() : null,
       latitude: Number(form.latitude),
       longitude: Number(form.longitude),
       city: form.city || null,
@@ -134,13 +134,13 @@ export default function CreateDisasterPage() {
               value={form.type}
               onChange={(e) => setForm((prev) => ({ ...prev, type: e.target.value as DisasterType }))}
             >
-              <option value="earthquake">Earthquake</option>
-              <option value="flood">Flood</option>
-              <option value="fire">Fire</option>
-              <option value="storm">Storm</option>
-              <option value="volcano">Volcano</option>
-              <option value="landslide">Landslide</option>
-              <option value="other">Other</option>
+              <option value="EARTHQUAKE">Earthquake</option>
+              <option value="FLOOD">Flood</option>
+              <option value="FIRE">Fire</option>
+              <option value="STORM">Storm</option>
+              <option value="VOLCANO">Volcano</option>
+              <option value="LANDSLIDE">Landslide</option>
+              <option value="OTHER">Other</option>
             </Select>
             <Select
               label="Severity"
@@ -170,14 +170,14 @@ export default function CreateDisasterPage() {
             <Input
               label="Start time"
               type="datetime-local"
-              value={form.start_time}
-              onChange={(e) => setForm((prev) => ({ ...prev, start_time: e.target.value }))}
+              value={form.startTime}
+              onChange={(e) => setForm((prev) => ({ ...prev, startTime: e.target.value }))}
             />
             <Input
               label="End time"
               type="datetime-local"
-              value={form.end_time}
-              onChange={(e) => setForm((prev) => ({ ...prev, end_time: e.target.value }))}
+              value={form.endTime}
+              onChange={(e) => setForm((prev) => ({ ...prev, endTime: e.target.value }))}
             />
             <Input
               label="Latitude"
