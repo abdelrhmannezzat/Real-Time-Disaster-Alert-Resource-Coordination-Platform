@@ -3,6 +3,10 @@ package com.example.disaster_live_alerts.websocket;
 import com.example.disaster_live_alerts.dto.AlertMessage;
 import com.example.disaster_live_alerts.security.services.JwtService;
 import io.jsonwebtoken.Claims;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -24,22 +28,15 @@ public class LiveAlertsWebSocketHandler extends TextWebSocketHandler {
 
     // session -> the user's location + userId, so we can filter/target
     private final Map<WebSocketSession, ClientContext> clients = new ConcurrentHashMap<>();
-    private final JwtService jwtService;
-
-    public LiveAlertsWebSocketHandler(JwtService jwtService) {
-        this.jwtService = jwtService;
-    }
 
     private record ClientContext(Integer userId, double lat, double lng) {}
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
-        Map<String, String> params = parseQueryParams(session);
-
-        String token = params.get("token");
-        Integer userId = (Integer)jwtService.extractClaim(token, claims -> claims.get("user_id"));
-        double lat = Double.parseDouble(params.getOrDefault("lat", "0"));
-        double lng = Double.parseDouble(params.getOrDefault("lng", "0"));
+        Map<String, Object> attributes = session.getAttributes();
+        Integer userId = (Integer) attributes.get("userId");
+        double lat = Double.parseDouble((String)attributes.get("lat"));
+        double lng = Double.parseDouble((String) attributes.get("lng"));
 
         clients.put(session, new ClientContext(userId, lat, lng));
         System.out.println("Connected: " + session.getId() + " total=" + clients.size());
@@ -87,21 +84,6 @@ public class LiveAlertsWebSocketHandler extends TextWebSocketHandler {
         } catch (IOException e) {
             System.err.println("Failed to send to " + session.getId() + ": " + e.getMessage());
         }
-    }
-
-    private Map<String, String> parseQueryParams(WebSocketSession session) {
-        Map<String, String> result = new HashMap<>();
-        String query = session.getUri() != null ? session.getUri().getQuery() : null;
-        if (query == null) return result;
-
-        for (String pair : query.split("&")) {
-            String[] kv = pair.split("=", 2);
-            if (kv.length == 2) {
-                result.put(URLDecoder.decode(kv[0], StandardCharsets.UTF_8),
-                        URLDecoder.decode(kv[1], StandardCharsets.UTF_8));
-            }
-        }
-        return result;
     }
 
     private double haversineKm(double lat1, double lon1, double lat2, double lon2) {
