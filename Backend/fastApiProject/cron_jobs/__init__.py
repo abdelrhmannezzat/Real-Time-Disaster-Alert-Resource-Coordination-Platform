@@ -1,6 +1,5 @@
-from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.blocking import BlockingScheduler
+from cron_jobs.job_service import JobService
 
-from dependencies.job_dep import build_job_service
-
-scheduler = BackgroundScheduler()
-job_service = build_job_service()
+scheduler = BlockingScheduler()
+job_service = JobService()

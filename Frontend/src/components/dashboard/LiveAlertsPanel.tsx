@@ -86,6 +86,21 @@ export default function LiveAlertsPanel({
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-2">
+                  {/* <div className="flex flex-wrap items-center gap-2">
+                    <div className="font-bold text-slate-900 dark:text-white">
+                      {alert.title}
+                    </div>
+
+                    <Badge
+                      className={cx(
+                        "capitalize",
+                        severityBadgeClass(alert.severity)
+                      )}
+                    >
+                      {alert.severity || "info"}
+                    </Badge>
+                  </div> */}
+
                   <div className="flex flex-wrap items-center gap-2">
                     <div className="font-bold text-slate-900 dark:text-white">
                       {alert.title}
@@ -99,6 +114,12 @@ export default function LiveAlertsPanel({
                     >
                       {alert.severity || "info"}
                     </Badge>
+
+                    {alert.type && (
+                      <Badge className="bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200">
+                        {alert.type.replace("_", " ")}
+                      </Badge>
+                    )}
                   </div>
 
                   <div className="space-y-2 text-sm text-slate-600 dark:text-slate-300">

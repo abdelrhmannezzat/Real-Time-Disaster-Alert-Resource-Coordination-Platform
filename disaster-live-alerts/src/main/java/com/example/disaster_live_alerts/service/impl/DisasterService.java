@@ -6,32 +6,30 @@ import com.example.disaster_live_alerts.enums.DisasterSource;
 import com.example.disaster_live_alerts.enums.DisasterType;
 import com.example.disaster_live_alerts.model.Disaster;
 import com.example.disaster_live_alerts.model.Location;
-import com.example.disaster_live_alerts.model.User;
 import com.example.disaster_live_alerts.repo.DisasterRepository;
 import com.example.disaster_live_alerts.security.CustomUserDetails;
 import com.example.disaster_live_alerts.service.IDisasterService;
 import com.example.disaster_live_alerts.service.ILocationService;
-import com.example.disaster_live_alerts.service.IUserService;
+import com.example.disaster_live_alerts.websocket.LiveAlertsWebSocketHandler;
 import jakarta.transaction.Transactional;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class DisasterService implements IDisasterService {
     private final DisasterRepository disasterRepository;
     private final ILocationService locationService;
+    private final LiveAlertsWebSocketHandler liveAlertsWebSocketHandler;
 
-    public DisasterService(DisasterRepository disasterRepository, ILocationService locationService) {
+    public DisasterService(DisasterRepository disasterRepository, ILocationService locationService, LiveAlertsWebSocketHandler liveAlertsWebSocketHandler) {
         this.disasterRepository = disasterRepository;
         this.locationService = locationService;
+        this.liveAlertsWebSocketHandler = liveAlertsWebSocketHandler;
     }
 
     @Override
@@ -69,6 +67,25 @@ public class DisasterService implements IDisasterService {
 
         disasterRepository.save(disaster);
 
+        NormalizedDisasterDto dto =
+                new NormalizedDisasterDto(
+                        disaster.getTitle(),
+                        disaster.getDescription(),
+                        disaster.getType(),
+                        disaster.getSeverity(),
+                        disaster.getSource(),
+                        disaster.getStatus(),
+                        disaster.getRadius(),
+                        null,
+                        disaster.getStartTime(),
+                        locationDto.getLatitude(),
+                        locationDto.getLongitude(),
+                        locationDto.getCity(),
+                        locationDto.getCountry()
+                );
+
+        liveAlertsWebSocketHandler.broadcastAlert(dto, 10000);
+
         return DisasterCreateResponseDto.builder()
                 .id(disaster.getId())
                 .title(disaster.getTitle())
@@ -95,5 +112,36 @@ public class DisasterService implements IDisasterService {
     public DisasterFetchResponseDto getDisaster(Long disasterId) {
         return disasterRepository.getDisasterById(disasterId)
                 .orElseThrow(() -> new RuntimeException("Disaster not found"));
+    }
+
+    @Override
+    @Transactional
+    public void createDisasterFromThirdParty(NormalizedDisasterDto disasterDto) {
+        if (disasterRepository.existsByExternalId(disasterDto.getExternalId())) {
+            return;
+        }
+        LocationDto loc =
+                LocationDto.builder()
+                        .longitude(disasterDto.getLongitude())
+                        .latitude(disasterDto.getLatitude())
+                        .city(disasterDto.getCity())
+                        .country(disasterDto.getCountry()).build();
+
+        Location location = locationService.createLocation(loc);
+
+        Disaster disaster =
+                Disaster.builder()
+                        .title(disasterDto.getTitle())
+                        .description(disasterDto.getDescription())
+                        .type(disasterDto.getType())
+                        .severity(disasterDto.getSeverity())
+                        .source(disasterDto.getSource())
+                        .status(disasterDto.getStatus())
+                        .radius(disasterDto.getRadius())
+                        .externalId(disasterDto.getExternalId())
+                        .startTime(disasterDto.getStartTime())
+                        .location(location).build();
+
+        disasterRepository.save(disaster);
     }
 }

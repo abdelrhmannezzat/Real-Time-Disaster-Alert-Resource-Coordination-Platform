@@ -1,7 +1,7 @@
 import reverse_geocode
 
 from model.enums import DisasterSeverity, DisasterType, DisasterSource, DisasterStatus
-from schema.dtos.normalized_disaster_dto import NormalizedDisasterDto
+from dtos.normalized_disaster_dto import NormalizedDisasterDto
 
 
 def get_severity(alert_level: str):

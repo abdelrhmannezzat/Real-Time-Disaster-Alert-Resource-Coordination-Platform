@@ -68,4 +68,6 @@ public interface DisasterRepository extends JpaRepository<Disaster, Long> {
     WHERE d.id = :disasterId
     """)
     Optional<DisasterFetchResponseDto> getDisasterById(Long disasterId);
+
+    boolean existsByExternalId(String externalId);
 }

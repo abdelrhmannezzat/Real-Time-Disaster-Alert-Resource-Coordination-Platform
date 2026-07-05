@@ -1,3 +1,5 @@
+import { DisasterType } from "./disaster";
+
 export type SocketState = "disconnected" | "connecting" | "connected" | "error";
 
 export interface LiveAlert {
@@ -7,6 +9,7 @@ export interface LiveAlert {
   message?: string;
 
   severity?: string;
+  type?: string;
   time: string;
 
   latitude?: number;

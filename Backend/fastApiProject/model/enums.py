@@ -2,9 +2,9 @@ import enum
 
 
 class UserRole(str, enum.Enum):
-    ADMIN = 'admin'
-    COORDINATOR = 'coordinator'
-    VOLUNTEER = 'volunteer'
+    ADMIN = 'ADMIN'
+    COORDINATOR = 'COORDINATOR'
+    VOLUNTEER = 'VOLUNTEER'
 
 
 class VolunteerStatus(str, enum.Enum):
@@ -14,40 +14,40 @@ class VolunteerStatus(str, enum.Enum):
 
 
 class DisasterType(str, enum.Enum):
-    EARTHQUAKE = 'earthquake'
-    FLOOD = 'flood'
-    FIRE = 'fire'
-    STORM = 'storm'
-    VOLCANO = 'volcano'
-    LANDSLIDE = 'landslide'
-    OTHER = 'other'
+    EARTHQUAKE = 'EARTHQUAKE'
+    FLOOD = 'FLOOD'
+    FIRE = 'FIRE'
+    STORM = 'STORM'
+    VOLCANO = 'VOLCANO'
+    LANDSLIDE = 'LANDSLIDE'
+    OTHER = 'OTHER'
 
 
 class DisasterSeverity(str, enum.Enum):
-    LOW = 'low'
-    MEDIUM = 'medium'
-    HIGH = 'high'
-    CRITICAL = 'critical'
+    LOW = 'LOW'
+    MEDIUM = 'MEDIUM'
+    HIGH = 'HIGH'
+    CRITICAL = 'CRITICAL'
 
 
 class DisasterStatus(str, enum.Enum):
-    ACTIVE = 'active'
-    MONITORING = 'monitoring'
-    RESOLVED = 'resolved'
+    ACTIVE = 'ACTIVE'
+    MONITORING = 'MONITORING'
+    RESOLVED = 'RESOLVED'
 
 
 class DisasterSource(str, enum.Enum):
-    MANUAL = "manual"
-    USGS = "usgs"
-    GDACS = "gdacs"
-    OPENWEATHER = "openweather"
+    MANUAL = "MANUAL"
+    USGS = "USGS"
+    GDACS = "GDACS"
+    OPENWEATHER = "OPENWEATHER"
 
 
 class AssignmentStatus(str, enum.Enum):
-    PENDING = 'pending'
-    ACCEPTED = 'accepted'
-    REJECTED = 'rejected'
-    COMPLETED = 'completed'
+    PENDING = 'PENDING'
+    ACCEPTED = 'ACCEPTED'
+    REJECTED = 'REJECTED'
+    COMPLETED = 'COMPLETED'
 
 
 class ResourceType(str, enum.Enum):

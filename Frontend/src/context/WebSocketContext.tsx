@@ -120,7 +120,14 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
                 typeof payload.message === "string"
                   ? payload.message
                   : undefined,
-              severity: typeof payload.severity === "string" ? payload.severity : "info",
+              severity:
+                typeof payload.severity === "string"
+                  ? payload.severity
+                  : "info",
+              type:
+                typeof payload.type === "string"
+                  ? payload.type
+                  : undefined,
               time: new Date().toLocaleTimeString(),
               raw: payload,
             });

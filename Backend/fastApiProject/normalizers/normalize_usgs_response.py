@@ -1,7 +1,7 @@
 from datetime import datetime, timezone, timedelta
 import reverse_geocode
 from model.enums import DisasterSeverity, DisasterSource, DisasterStatus
-from schema.dtos.normalized_disaster_dto import NormalizedDisasterDto
+from dtos.normalized_disaster_dto import NormalizedDisasterDto
 
 
 def get_severity(mag: float) -> DisasterSeverity:
@@ -46,7 +46,7 @@ def normalize_usgs_response(response):
         # We still need to create location first
         normalized_disaster = NormalizedDisasterDto(
             title=event.get('properties').get('title'),
-            type=event.get('properties').get('type'),
+            type=str(event.get('properties').get('type')).upper(),
             severity=severity,
             source=DisasterSource.USGS,
             status=DisasterStatus.ACTIVE,
@@ -54,8 +54,8 @@ def normalize_usgs_response(response):
             external_id=event.get('id'),
             start_time=datetime.fromtimestamp(
                 int(event.get('properties').get('time')) / 1000.0,
-                tz=timezone(timedelta(hours=3))
-            ),
+                tz=timezone.utc
+            ).replace(tzinfo=None),
             latitude=latitude,
             longitude=longitude,
             city=city,

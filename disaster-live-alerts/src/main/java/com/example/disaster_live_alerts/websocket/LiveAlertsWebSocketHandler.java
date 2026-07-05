@@ -1,12 +1,8 @@
 package com.example.disaster_live_alerts.websocket;
 
 import com.example.disaster_live_alerts.dto.AlertMessage;
-import com.example.disaster_live_alerts.security.services.JwtService;
-import io.jsonwebtoken.Claims;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import com.example.disaster_live_alerts.dto.NormalizedDisasterDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -15,9 +11,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -51,27 +44,32 @@ public class LiveAlertsWebSocketHandler extends TextWebSocketHandler {
      * Broadcasts to every connected client within radiusKm of the alert's location.
      * If the alert has no lat/lng, it goes to everyone.
      */
-    public void broadcastAlert(AlertMessage alert, double radiusKm) {
+    public void broadcastAlert(NormalizedDisasterDto disaster, @Value("${alerts.radius}") double radiusKm) {
+        AlertMessage alert = new AlertMessage(
+                disaster.getExternalId(),
+                disaster.getTitle(),
+                disaster.getDescription(),
+                disaster.getSeverity(),
+                disaster.getLatitude(),
+                disaster.getLongitude(),
+                0.0,
+                disaster.getType()
+        );
         for (Map.Entry<WebSocketSession, ClientContext> entry : clients.entrySet()) {
             WebSocketSession session = entry.getKey();
             ClientContext ctx = entry.getValue();
 
             if (!session.isOpen()) continue;
 
-            AlertMessage toSend = alert;
-
             if (alert.getLatitude() != null && alert.getLongitude() != null) {
                 double dist = haversineKm(ctx.lat(), ctx.lng(), alert.getLatitude(), alert.getLongitude());
                 if (dist > radiusKm) continue; // too far, skip this client
 
                 // attach the per-client distance before sending
-                toSend = new AlertMessage(
-                        alert.getTitle(), alert.getMessage(), alert.getSeverity(),
-                        alert.getLatitude(), alert.getLongitude(), dist
-                );
+                alert.setDistance(dist);
             }
 
-            sendJson(session, toSend);
+            sendJson(session, alert);
         }
     }
 
